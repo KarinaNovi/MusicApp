@@ -1,7 +1,6 @@
 package com.novi.app.service;
 
 import com.novi.app.model.Group;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
