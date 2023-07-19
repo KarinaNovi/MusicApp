@@ -1,6 +1,7 @@
 package com.novi.app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class MusicInstrument {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int instrumentId;
-    @Column(name = "instrument_name")
+    @Column(name = "instrument_name", length = 256, nullable = false)
+    @NotNull
     private String instrumentName;
 
     @ManyToMany

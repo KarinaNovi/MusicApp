@@ -1,6 +1,7 @@
 package com.novi.app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class MusicStyle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int styleId;
-    @Column(name = "style_name")
+    @Column(name = "style_name", length = 256, nullable = false)
+    @NotNull
     private String styleName;
 
     @ManyToMany

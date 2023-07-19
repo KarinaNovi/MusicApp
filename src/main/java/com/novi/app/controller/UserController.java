@@ -40,7 +40,7 @@ public class UserController {
         String middleName = user.getMiddleName();
         String phoneNumber = user.getPhoneNumber();
         String email = user.getEmail();
-        String password = user.getMd5();
+        String password = user.getPassword();
         String birthday = user.getBirthday();
         long registrationDate = System.currentTimeMillis();
         // TODO: add automatic service to add max default value

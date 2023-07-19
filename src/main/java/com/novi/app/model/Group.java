@@ -2,9 +2,8 @@ package com.novi.app.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.List;
 
@@ -13,33 +12,46 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int groupId;
-    @Column(name = "group_name")
+    @Column(name = "group_name", length = 50, nullable = false)
     @NotNull
     private String groupName;
     @Column(name = "max_quantity")
     private int maxQuantity;
     @Column(name = "current_quantity")
     private int currentQuantity;
-    @Column(name = "who_in_desc")
+    @Column(name = "who_in_desc", length = 250)
     private String whoInDesc;
-    @Column(name = "who_needs_desc")
+    @Column(name = "who_needs_desc", length = 4000)
     private String whoNeedsDesc;
     @Column(name = "registration_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String registrationDate;
     @Column(name = "deleted_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String deletedDate;
-    @Column(name = "leader_id")
+    @Column(name = "leader_id", insertable=false, updatable=false)
     private int leaderId;
     @Column(name = "repetition_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm.SSSXXX")
     private String repetitionDate;
+    @Column(name = "password", length = 256, nullable = false)
+    @NotNull
+    private String password;
 
     @ManyToMany
+    @JoinColumn(name = "user_id", nullable = false)
     List<User> users;
+
+    @ManyToOne
+    @JoinColumn(name = "leader_id", nullable = false)
+    private User user;
 
     @ManyToMany
     private List<Location> locations;
@@ -66,9 +78,5 @@ public class Group {
         this.registrationDate = registrationDate;
         this.deletedDate = deletedDate;
         this.repetitionDate = repetitionDate;
-    }
-
-    public Group() {
-
     }
 }
