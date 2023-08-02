@@ -32,10 +32,10 @@ public class Group {
     private String whoNeedsDesc;
     @Column(name = "registration_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String registrationDate;
+    private String registrationDtm;
     @Column(name = "deleted_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String deletedDate;
+    private String deletionDtm;
     @Column(name = "leader_id", insertable=false, updatable=false)
     private int leaderId;
     @Column(name = "repetition_date")
@@ -67,16 +67,16 @@ public class Group {
                  int currentQuantity,
                  String whoInDesc,
                  String whoNeedsDesc,
-                 String registrationDate,
-                 String deletedDate,
+                 String registrationDtm,
+                 String deletionDtm,
                  String repetitionDate) {
         this.groupName = groupName;
         this.maxQuantity = maxQuantity;
         this.currentQuantity = currentQuantity;
         this.whoInDesc = whoInDesc;
         this.whoNeedsDesc = whoNeedsDesc;
-        this.registrationDate = registrationDate;
-        this.deletedDate = deletedDate;
+        this.registrationDtm = registrationDtm;
+        this.deletionDtm = deletionDtm;
         this.repetitionDate = repetitionDate;
     }
 }

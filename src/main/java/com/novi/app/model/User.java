@@ -1,11 +1,16 @@
 package com.novi.app.model;
 
+import com.novi.app.util.Constants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -13,11 +18,10 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private int userId;
     @Column(name = "first_name", length = 50, nullable = false)
     @NotNull
@@ -33,24 +37,23 @@ public class User {
     @NotNull
     private String email;
     @Column(name = "birthday", nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd.MM.yyyy")
     @NotNull
     private String birthday;
     @Column(name = "user_login")
+    @NotNull
     private String userLogin;
     @Column(name = "password", length = 256, nullable = false)
     @NotNull
     private String password;
-    @Column(name = "registration_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String registrationDate;
-    @Column(name = "deleted_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String deletedDate;
+    @Column(name = "registration_dtm")
+    private String registrationDtm;
+    @Column(name = "deletion_dtm")
+    @DateTimeFormat(pattern = "dd.MM.yyyy'T'HH:mm:ssXXX")
+    private String deletionDtm;
 
 
     @ManyToMany
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id")
     private List<Group> groups;
 
     @OneToOne
@@ -63,17 +66,49 @@ public class User {
     @ManyToMany
     private List<MusicStyle> musicStyles;
 
-    @Override
-    public String toString() {
-        return String.format(
-                "User[id=%d, firstName='%s', lastName='%s', phoneNumber='%s', email='%s']",
-                userId, firstName, lastName, phoneNumber, email);
+    public User(@NotNull String firstName,
+                @NotNull String lastName,
+                String middleName,
+                String phoneNumber,
+                @NotNull String email,
+                String userLogin,
+                @NotNull String password,
+                @NotNull String birthday) {
+        this.firstName = formatName(firstName);
+        this.lastName = formatName(lastName);
+        this.middleName = formatName(middleName);
+        this.phoneNumber = formatPhoneNumber(phoneNumber);
+        this.email = email;
+        this.userLogin = formatUserLogin(userLogin);
+        this.password = encryptPassword(password);
+        // TODO: format will be updated on UI side?
+        this.birthday = birthday;
+        this.registrationDtm = formatDate(new Date());
+        // creation - default max value, deletion - override to Sysdate
+        this.deletionDtm = formatDate(new Date(Constants.MAX_DATE));
     }
 
-    public User(@NotNull String firstName, @NotNull String lastName, String phoneNumber, @NotNull String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
+    private String formatDate(Date inputDate) {
+        SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        return customDateFormat.format(inputDate);
+    }
+
+    private String formatName(String inputName) {
+        return inputName == null
+                ? null
+                : inputName.substring(0, 1).toUpperCase() + inputName.substring(1);
+    }
+
+    private String formatPhoneNumber(String phoneNumber) {
+        return phoneNumber.substring(0, 1).replaceAll("\\d", "+7") + " (" + phoneNumber.substring(1, 4) + ") " + phoneNumber.substring(4, 7) + " " + phoneNumber.substring(7, 9) + " " + phoneNumber.substring(9);
+    }
+
+    private String formatUserLogin(String userLogin) {
+        return userLogin != null ? userLogin : String.valueOf(UUID.randomUUID());
+    }
+
+    private String encryptPassword(String password) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.encode(password);
     }
 }

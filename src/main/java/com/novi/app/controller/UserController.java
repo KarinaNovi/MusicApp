@@ -22,7 +22,6 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-    // тут вызывается пока еще пустая таблица
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUser(Model model) {
         model.addAttribute("addUser", new User());
@@ -30,7 +29,6 @@ public class UserController {
         return "users";
     }
 
-    // тут вставляются свои данные в инпуты с учетом валидации
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String getUser( @ModelAttribute("user") User user, BindingResult bindingResult,
                            Model model) {
@@ -40,43 +38,54 @@ public class UserController {
         String middleName = user.getMiddleName();
         String phoneNumber = user.getPhoneNumber();
         String email = user.getEmail();
+        String login = user.getUserLogin();
         String password = user.getPassword();
         String birthday = user.getBirthday();
-        long registrationDate = System.currentTimeMillis();
-        // TODO: add automatic service to add max default value
-        long deletedDate = 1L;
-        // TODO: if user doesn't set it - generate random value based on name and b-day
-        String login = user.getUserLogin();
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             return "users";
         }
-        user = new User(firstName.substring(0, 1).toUpperCase() + firstName.substring(1),
-                lastName.substring(0, 1).toUpperCase() + lastName.substring(1),
-                phoneNumber.charAt(0) + " (" + phoneNumber.substring(1, 4) + ") " + phoneNumber.substring(4, 7) + " " + phoneNumber.substring(7, 9) + " " + phoneNumber.substring(9), email);
+        user = new User(firstName,
+                lastName,
+                middleName,
+                phoneNumber,
+                email,
+                login,
+                password,
+                birthday);
         userService.save(user);
         return "redirect:/users";
     }
 
-    // тут информация из строки таблицы с id вставляется в инпут и редактируется там
     @RequestMapping(value="/edit", method= RequestMethod.POST)
     public String updateUser(@RequestParam("userId") Long userId, Model model) {
-        Optional<User> user = userService.findById(userId);
-        if (user.isPresent()){
-            String phoneNumber = user.get().getPhoneNumber().replaceAll("[-()\\s]", "");
-            String firstName = user.get().getFirstName();
-            String lastName = user.get().getLastName();
-            String email = user.get().getEmail();
-            user = Optional.of(new User(firstName.substring(0, 1).toUpperCase() + firstName.substring(1),
-                    lastName.substring(0, 1).toUpperCase() + lastName.substring(1),
-                    phoneNumber, email));
+        Optional<User> optionalUser = userService.findById(userId);
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            String phoneNumber = user.getPhoneNumber().replaceAll("[-()\\s]", "");
+            String firstName = user.getFirstName();
+            String lastName = user.getLastName();
+            String middleName = user.getMiddleName();
+            String login = user.getUserLogin();
+            String password = user.getPassword();
+            String birthday = user.getBirthday();
+            String email = user.getEmail();
+            optionalUser = Optional.of(new User(firstName,
+                    lastName,
+                    middleName,
+                    phoneNumber,
+                    email,
+                    login,
+                    password,
+                    birthday));
         }
-        model.addAttribute("addUser", user);
-        //update user to database
+        model.addAttribute("addUser", optionalUser);
+        // WA for dropping sequence
         userService.delete(userId);
         return "users";
     }
-    // а тут по id удаляется user
+
+    // TODO: delete user is to set deletionDtm = sysdate, not physical deletion from DB
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("userId") Long userId) {
         userService.delete(userId);

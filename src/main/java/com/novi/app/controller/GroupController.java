@@ -30,12 +30,12 @@ public class GroupController {
         int currentQuantity = group.getCurrentQuantity();
         String whoInDesc = group.getWhoInDesc();
         String whoNeedsDesc = group.getWhoNeedsDesc();
-        String registrationDate = String.valueOf(System.currentTimeMillis());
+        String registrationDtm = String.valueOf(System.currentTimeMillis());
         // TODO: add automatic service to add max default value
-        String deletedDate = String.valueOf(1L);
+        String deletionDtm = String.valueOf(1L);
         // TODO: how to get userId to set leaderId?
         String repetitionDate = group.getRepetitionDate();
-        group = new Group(groupName, maxQuantity, currentQuantity, whoInDesc, whoNeedsDesc, registrationDate, deletedDate, repetitionDate);
+        group = new Group(groupName, maxQuantity, currentQuantity, whoInDesc, whoNeedsDesc, registrationDtm, deletionDtm, repetitionDate);
         groupService.save(group);
         return "redirect:/groups";
     }
