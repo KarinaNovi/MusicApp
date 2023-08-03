@@ -3,7 +3,7 @@ package com.novi.app.service.impl;
 import com.novi.app.service.UserService;
 import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
-import com.novi.app.repository.UserRepository;
+import com.novi.app.model.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;

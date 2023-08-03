@@ -1,7 +1,7 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.Group;
-import com.novi.app.repository.GroupRepository;
+import com.novi.app.model.repository.GroupRepository;
 import com.novi.app.service.GroupService;
 import org.springframework.stereotype.Service;
 

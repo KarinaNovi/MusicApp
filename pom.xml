@@ -25,6 +25,7 @@
         <junit.version>4.13.2</junit.version>
         <validator.version>8.0.0.Final</validator.version>
         <postgre.version>42.5.4</postgre.version>
+        <tomcat.version>10.1.9</tomcat.version>
     </properties>
 
     <dependencies>
@@ -78,6 +79,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>${tomcat.version}</version>
         </dependency>
     </dependencies>
 

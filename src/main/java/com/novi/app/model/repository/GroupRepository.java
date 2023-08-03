@@ -1,11 +1,11 @@
-package com.novi.app.repository;
+package com.novi.app.model.repository;
 
-import com.novi.app.model.User;
+import com.novi.app.model.Group;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface GroupRepository extends CrudRepository<Group, Long> {
     void deleteById(@NotNull Long id);
 }
