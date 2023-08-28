@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    //TODO: add logger
 
     private final UserRepository userRepository;
 
@@ -20,13 +21,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        List<User> users = new ArrayList<>();
+        return new ArrayList<>(userRepository.findAll());
+    }
 
-        for (User user : userRepository.findAll()) {
-
-            users.add(user);
+    @Override
+    public void update(Long userId, User user) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            userRepository.save(optionalUser.get());
+        } else {
+            System.out.println("No existing user with such id");
         }
-        return users;
     }
 
     @Override
@@ -35,13 +40,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 
     @Override
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface GroupService {
     List<Group> findAll();
-    Group save(Group group);
+    void save(Group group);
     Optional<Group> findById(Long id);
     void delete(Long id);
 

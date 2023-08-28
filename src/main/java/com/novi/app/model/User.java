@@ -22,7 +22,7 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private long userId;
     @Column(name = "first_name", length = 50, nullable = false)
     @NotNull
     private String firstName;

@@ -20,19 +20,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> findAll() {
-        List<Group> groups = new ArrayList<>();
 
-        for (Group group : groupRepository.findAll()) {
-
-            groups.add(group);
-        }
-        return groups;
+        return new ArrayList<>(groupRepository.findAll());
     }
 
     @Override
-    public Group save(Group group) {
+    public void save(Group group) {
         groupRepository.save(group);
-        return group;
     }
 
     @Override
