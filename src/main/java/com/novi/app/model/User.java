@@ -52,18 +52,33 @@ public class User {
     private String deletionDtm;
 
 
-    @ManyToMany
-    @JoinColumn(name = "group_id")
+    // TODO: delete temporary solution with fetch type ad switch to transactional session factory
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "groups_users",
+            joinColumns = { @JoinColumn(name = "users_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "groups_group_id") }
+    )
     private List<Group> groups;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private Group group;
+//    TODO: Change to method in repository - User and Group
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private List<Group> groupsOfLeader;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "music_instruments_users",
+            joinColumns = { @JoinColumn(name = "users_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
+    )
     private List<MusicInstrument> musicInstruments;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "music_style_users",
+            joinColumns = { @JoinColumn(name = "users_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
+    )
     private List<MusicStyle> musicStyles;
 
     public User(@NotNull String firstName,
@@ -84,7 +99,6 @@ public class User {
         // TODO: format will be updated on UI side?
         this.birthday = birthday;
         this.registrationDtm = formatDate(new Date());
-        // creation - default max value, deletion - override to Sysdate
         this.deletionDtm = formatDate(new Date(Constants.MAX_DATE));
     }
 

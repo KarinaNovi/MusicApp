@@ -26,9 +26,12 @@ public class MusicStyle {
     @NotNull
     private String styleName;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "musicStyles")
     private List<User> users;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "musicStyles")
     private List<Group> groups;
+
+    @ManyToMany(mappedBy = "musicStyles")
+    private List<Location> locations;
 }

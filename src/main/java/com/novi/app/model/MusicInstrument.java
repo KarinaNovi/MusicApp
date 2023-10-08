@@ -26,12 +26,12 @@ public class MusicInstrument {
     @NotNull
     private String instrumentName;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "musicInstruments")
     private List<Group> groups;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "musicInstruments")
     private List<Location> locations;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "musicInstruments")
     private List<User> users;
 }

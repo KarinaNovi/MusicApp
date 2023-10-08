@@ -45,21 +45,40 @@ public class Group {
     @NotNull
     private String password;
 
-    @ManyToMany
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "groups_users",
+            joinColumns = { @JoinColumn(name = "groups_group_id") },
+            inverseJoinColumns = { @JoinColumn(name = "users_user_id") }
+    )
     List<User> users;
 
     @ManyToOne
     @JoinColumn(name = "leader_id", nullable = false)
-    private User user;
+    private User groupsOfLeader;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "location_groups",
+            joinColumns = { @JoinColumn(name = "groups_group_id") },
+            inverseJoinColumns = { @JoinColumn(name = "location_location_id") }
+    )
     private List<Location> locations;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "music_instruments_groups",
+            joinColumns = { @JoinColumn(name = "groups_group_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
+    )
     private List<MusicInstrument> musicInstruments;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "music_style_groups",
+            joinColumns = { @JoinColumn(name = "groups_group_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
+    )
     private List<MusicStyle> musicStyles;
 
     public Group(@NotNull String groupName,

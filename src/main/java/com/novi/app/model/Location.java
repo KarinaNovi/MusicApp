@@ -38,9 +38,22 @@ public class Location {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String repetitionDate;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "locations")
     private List<Group> groups;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "music_instruments_location",
+            joinColumns = { @JoinColumn(name = "location_location_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
+    )
     private List<MusicInstrument> musicInstruments;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "music_style_location",
+            joinColumns = { @JoinColumn(name = "location_location_id") },
+            inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
+    )
+    private List<MusicStyle> musicStyles;
 }

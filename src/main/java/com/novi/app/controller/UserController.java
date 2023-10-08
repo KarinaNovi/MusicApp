@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
+// TODO: align with new html, deprecated for now
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -28,18 +29,12 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String getUsers(Model model) {
+    @GetMapping
+    public String index(Model model){
         model.addAttribute("addUser", new User());
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users",userService.findAll());
         return "users";
     }
-
-//    @GetMapping
-//    public String index(Model model){
-//        model.addAttribute("users",userService.findAll());
-//        return "users";
-//    }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long userId, Model model){
@@ -53,12 +48,31 @@ public class UserController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute @Valid User user,
-                         BindingResult bindingResult){
+    public String create(@ModelAttribute("user") //@Valid
+                                     User user,
+                         BindingResult bindingResult,
+                         Model model) {
+            model.addAttribute("addUser", new User());
+            String firstName = user.getFirstName();
+            String lastName = user.getLastName();
+            String middleName = user.getMiddleName();
+            String phoneNumber = user.getPhoneNumber();
+            String email = user.getEmail();
+            String login = user.getUserLogin();
+            String password = user.getPassword();
+            String birthday = user.getBirthday();
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "users/new";
+            return "users";
         }
+        user = new User(firstName,
+                lastName,
+                middleName,
+                phoneNumber,
+                email,
+                login,
+                password,
+                birthday);
         userService.save(user);
         return "redirect:/users";
     }
