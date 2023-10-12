@@ -32,13 +32,13 @@ public class UserController {
     @GetMapping
     public String index(Model model){
         model.addAttribute("addUser", new User());
-        model.addAttribute("users",userService.findAll());
+        model.addAttribute("users",userService.findAllUsers());
         return "users";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long userId, Model model){
-        model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("user", userService.findUserById(userId));
         return "users/show";
     }
 
@@ -73,13 +73,13 @@ public class UserController {
                 login,
                 password,
                 birthday);
-        userService.save(user);
+        userService.saveUser(user);
         return "redirect:/users";
     }
 
     @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") Long userId){
-        model.addAttribute("addUser", userService.findById(userId));
+        model.addAttribute("addUser", userService.findUserById(userId));
         return "users/edit";
     }
 
@@ -91,24 +91,24 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        userService.update(userId, user);
+        userService.updateUser(userId, user);
         return "redirect:/users";
     }
 
     // delete = set DeletionDtm as sysdate only
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("userId") Long userId) {
-        Optional<User> user = userService.findById(userId);
+        Optional<User> user = userService.findUserById(userId);
         SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         user.ifPresent(value -> value.setDeletionDtm(customDateFormat.format(new Date())));
-        userService.delete(userId);
+        userService.deleteUser(userId);
         return "redirect:/users";
     }
 
     // Not recommended physical deletion - manual corrections only!
     @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
     public String deleteUserFromDB(@RequestParam("userId") Long userId) {
-        userService.delete(userId);
+        userService.deleteUser(userId);
         return "redirect:/users";
     }
 }

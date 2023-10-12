@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
 import com.novi.app.model.repository.UserRepository;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -20,12 +19,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public void update(Long userId, User user) {
+    public void updateUser(Long userId, User user) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             userRepository.save(optionalUser.get());
@@ -35,18 +34,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
     @Override
-    public Optional<User> findById(Long userId) {
+    public Optional<User> findUserById(Long userId) {
         return userRepository.findById(userId);
     }
 
     @Override
-    public void delete(Long userId) {
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void terminateUser(User user) {
+        Optional<User> optionalUser = userRepository.findById(user.getUserId());
+        if (optionalUser.isPresent()) {
+            User userToUpdate = optionalUser.get();
+            userToUpdate.setDeletionDtm(UserUtil.formatDate(new Date()));
+            userRepository.save(userToUpdate);
+        } else {
+            System.out.println("WARN: No existing user with such id");
+        }
     }
 
     @Override
