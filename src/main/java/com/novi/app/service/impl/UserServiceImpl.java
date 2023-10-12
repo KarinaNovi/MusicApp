@@ -1,13 +1,13 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.service.UserService;
+import com.novi.app.util.UserUtil;
 import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
 import com.novi.app.model.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(userRepository.findAll());
+        return userRepository.findAll();
     }
 
     @Override
@@ -47,6 +47,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public List<User> findNewlyCreatedUsers() {
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.add(Calendar.MONTH, -1);
+        String formattedDate = UserUtil.formatDate(currentDate.getTime());
+        return userRepository.findNewlyCreatedUsers(formattedDate);
     }
 
 }

@@ -36,4 +36,10 @@ public class UserServiceTest {
         Optional<User> checkSuccessfulDelete = userService.findById(user.getUserId());
         Assertions.assertTrue(checkSuccessfulDelete.isEmpty());
     }
+
+    @Test
+    @Rollback
+    public void testNewlyCreatedUsers() {
+        System.out.println(userService.findNewlyCreatedUsers());
+    }
 }
