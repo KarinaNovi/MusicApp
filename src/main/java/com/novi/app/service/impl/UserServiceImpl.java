@@ -1,6 +1,7 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.service.UserService;
+import com.novi.app.util.Constants;
 import com.novi.app.util.UserUtil;
 import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
@@ -66,6 +67,12 @@ public class UserServiceImpl implements UserService {
         currentDate.add(Calendar.MONTH, -1);
         String formattedDate = UserUtil.formatDate(currentDate.getTime());
         return userRepository.findNewlyCreatedUsers(formattedDate);
+    }
+
+    @Override
+    public List<User> findActiveUsers() {
+        String formattedDate = UserUtil.formatDate(new Date(Constants.MAX_DATE));
+        return userRepository.findActiveUsers(formattedDate);
     }
 
 }

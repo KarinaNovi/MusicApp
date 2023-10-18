@@ -13,4 +13,5 @@ public interface UserService {
     void deleteUser(Long userId);
     void terminateUser(User user);
     List<User> findNewlyCreatedUsers();
+    List<User> findActiveUsers();
 }

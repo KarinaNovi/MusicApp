@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Optional;
 
 @SpringBootTest
@@ -42,7 +40,7 @@ public class UserServiceTest {
 
     @Test
     @Rollback
-    public void testNewlyCreatedUsers() {
+    public void testPrintNewlyCreatedUsers() {
         // TODO: create logger for such tests
         System.out.println(userService.findNewlyCreatedUsers());
     }
@@ -70,5 +68,12 @@ public class UserServiceTest {
         userService.deleteUser(user.getUserId());
         Optional<User> checkSuccessfulDelete = userService.findUserById(user.getUserId());
         Assertions.assertTrue(checkSuccessfulDelete.isEmpty());
+    }
+
+    @Test
+    @Rollback
+    public void testPrintActiveUsers() {
+        // TODO: create logger for such tests
+        System.out.println(userService.findActiveUsers());
     }
 }

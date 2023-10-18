@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM USERS WHERE registration_dtm > :date", nativeQuery = true)
     List<User> findNewlyCreatedUsers(@Param("date") String date);
+
+    @Query(value = "SELECT * FROM USERS WHERE users.deletion_dtm = :date", nativeQuery = true)
+    List<User> findActiveUsers(@Param("date") String date);
 }
