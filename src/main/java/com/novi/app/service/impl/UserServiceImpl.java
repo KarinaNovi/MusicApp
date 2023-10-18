@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long userId, User user) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            userRepository.save(optionalUser.get());
+            userRepository.save(user);
         } else {
-            System.out.println("No existing user with such id");
+            System.out.println("WARN: No existing user with such id");
         }
     }
 

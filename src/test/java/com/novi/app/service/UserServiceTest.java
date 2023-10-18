@@ -40,6 +40,29 @@ public class UserServiceTest {
 
     @Test
     @Rollback
+    public void testUpdateUser() {
+        String firstName = "Tom";
+        String lastName = "Cat";
+        String phoneNumber = "79103421050";
+        String email = "1@gmail.com";
+        String password = "12345";
+        String birthday = String.valueOf(LocalDate.of(1997,9,21));
+        User user = new User(firstName,lastName,null,phoneNumber,email,null,password,birthday);
+        userService.saveUser(user);
+        Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
+        Assertions.assertTrue(checkSuccessfulSave.isPresent());
+        user.setUserLogin("updated_login");
+        userService.updateUser(user.getUserId(), user);
+        Optional<User> checkSuccessfulUpdate = userService.findUserById(user.getUserId());
+        Assertions.assertTrue(checkSuccessfulUpdate.isPresent());
+        Assertions.assertEquals("updated_login", checkSuccessfulUpdate.get().getUserLogin());
+        userService.deleteUser(user.getUserId());
+        Optional<User> checkSuccessfulDelete = userService.findUserById(user.getUserId());
+        Assertions.assertTrue(checkSuccessfulDelete.isEmpty());
+    }
+
+    @Test
+    @Rollback
     public void testPrintNewlyCreatedUsers() {
         // TODO: create logger for such tests
         System.out.println(userService.findNewlyCreatedUsers());
