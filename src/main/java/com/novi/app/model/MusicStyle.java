@@ -1,12 +1,12 @@
 package com.novi.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "music_style")
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MusicStyle {
@@ -26,12 +25,27 @@ public class MusicStyle {
     @NotNull
     private String styleName;
 
-    @ManyToMany(mappedBy = "musicStyles")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicStyles")
+    @JsonIgnore
     private List<User> users;
 
-    @ManyToMany(mappedBy = "musicStyles")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicStyles")
+    @JsonIgnore
     private List<Group> groups;
 
-    @ManyToMany(mappedBy = "musicStyles")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicStyles")
+    @JsonIgnore
     private List<Location> locations;
 }

@@ -1,19 +1,20 @@
 package com.novi.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "groups")
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Group {
 
     @Id
@@ -45,19 +46,23 @@ public class Group {
     @NotNull
     private String password;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "groups_users",
-            joinColumns = { @JoinColumn(name = "groups_group_id") },
-            inverseJoinColumns = { @JoinColumn(name = "users_user_id") }
-    )
-    List<User> users;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "groups")
+    @JsonIgnore
+    Set<User> users = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "leader_id", nullable = false)
-    private User groupsOfLeader;
+//    @ManyToOne
+//    @JoinColumn(name = "leader_id", nullable = false)
+//    private User groupsOfLeader;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "location_groups",
             joinColumns = { @JoinColumn(name = "groups_group_id") },
@@ -65,7 +70,11 @@ public class Group {
     )
     private List<Location> locations;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "music_instruments_groups",
             joinColumns = { @JoinColumn(name = "groups_group_id") },
@@ -73,7 +82,11 @@ public class Group {
     )
     private List<MusicInstrument> musicInstruments;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "music_style_groups",
             joinColumns = { @JoinColumn(name = "groups_group_id") },

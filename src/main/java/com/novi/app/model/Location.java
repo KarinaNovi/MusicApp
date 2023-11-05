@@ -1,12 +1,12 @@
 package com.novi.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "location")
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {
@@ -38,7 +37,12 @@ public class Location {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String repetitionDate;
 
-    @ManyToMany(mappedBy = "locations")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "locations")
+    @JsonIgnore
     private List<Group> groups;
 
     @ManyToMany(cascade = { CascadeType.ALL })

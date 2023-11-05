@@ -1,20 +1,19 @@
 package com.novi.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "music_instruments")
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MusicInstrument {
@@ -26,12 +25,27 @@ public class MusicInstrument {
     @NotNull
     private String instrumentName;
 
-    @ManyToMany(mappedBy = "musicInstruments")
-    private List<Group> groups;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicInstruments")
+    @JsonIgnore
+    private Set<Group> groups;
 
-    @ManyToMany(mappedBy = "musicInstruments")
-    private List<Location> locations;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicInstruments")
+    @JsonIgnore
+    private Set<Location> locations;
 
-    @ManyToMany(mappedBy = "musicInstruments")
-    private List<User> users;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicInstruments")
+    @JsonIgnore
+    private Set<User> users;
 }

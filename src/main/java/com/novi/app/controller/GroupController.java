@@ -19,7 +19,7 @@ public class GroupController {
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET)
     public String getUser(Model model) {
-        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("groups", groupService.findAllGroups());
         return "groups";
     }
 
@@ -36,7 +36,7 @@ public class GroupController {
         // TODO: how to get userId to set leaderId?
         String repetitionDate = group.getRepetitionDate();
         group = new Group(groupName, maxQuantity, currentQuantity, whoInDesc, whoNeedsDesc, registrationDtm, deletionDtm, repetitionDate);
-        groupService.save(group);
+        groupService.saveGroup(group);
         return "redirect:/groups";
     }
 }

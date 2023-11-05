@@ -7,16 +7,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
 @Setter
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,35 +46,45 @@ public class User {
     @DateTimeFormat(pattern = "dd.MM.yyyy'T'HH:mm:ssXXX")
     private String deletionDtm;
 
-
-    // TODO: delete temporary solution with fetch type ad switch to transactional session factory
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "groups_users",
             joinColumns = { @JoinColumn(name = "users_user_id") },
             inverseJoinColumns = { @JoinColumn(name = "groups_group_id") }
     )
-    private List<Group> groups;
+    private Set<Group> groups = new HashSet<>();
 
 //    TODO: Change to method in repository - User and Group
 //    @OneToMany(fetch = FetchType.EAGER)
 //    private List<Group> groupsOfLeader;
 
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "music_instruments_users",
             joinColumns = { @JoinColumn(name = "users_user_id") },
             inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
     )
-    private List<MusicInstrument> musicInstruments;
+    private Set<MusicInstrument> musicInstruments = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "music_style_users",
             joinColumns = { @JoinColumn(name = "users_user_id") },
             inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
     )
-    private List<MusicStyle> musicStyles;
+    private Set<MusicStyle> musicStyles = new HashSet<>();
 
     public User(@NotNull String firstName,
                 @NotNull String lastName,

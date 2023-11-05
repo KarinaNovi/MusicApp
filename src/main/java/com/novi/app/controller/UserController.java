@@ -2,6 +2,8 @@ package com.novi.app.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +15,7 @@ import com.novi.app.service.validator.UserValidator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 // TODO: align with new html, deprecated for now
@@ -29,11 +32,10 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-    @GetMapping
-    public String index(Model model){
-        model.addAttribute("addUser", new User());
-        model.addAttribute("users",userService.findAllUsers());
-        return "users";
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> index(){
+        List<User> users = userService.findAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

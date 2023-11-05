@@ -1,0 +1,17 @@
+package com.novi.app.service;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+public class GroupServiceTest {
+
+    @Autowired
+    private GroupService groupService;
+
+    @Test
+    public void testPrintAllGroupsName() {
+        groupService.findAllGroups().forEach(group -> System.out.println(group.getGroupName()));
+    }
+}
