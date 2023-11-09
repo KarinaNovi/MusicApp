@@ -5,7 +5,6 @@ import com.novi.app.util.UserUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.*;
 
@@ -41,10 +40,9 @@ public class User {
     @NotNull
     private String password;
     @Column(name = "registration_dtm")
-    private String registrationDtm;
+    private Date registrationDtm;
     @Column(name = "deletion_dtm")
-    @DateTimeFormat(pattern = "dd.MM.yyyy'T'HH:mm:ssXXX")
-    private String deletionDtm;
+    private Date deletionDtm;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -103,7 +101,7 @@ public class User {
         this.password = UserUtil.encryptPassword(password);
         // TODO: format will be updated on UI side?
         this.birthday = birthday;
-        this.registrationDtm = UserUtil.formatDate(new Date());
-        this.deletionDtm = UserUtil.formatDate(new Date(Constants.MAX_DATE));
+        this.registrationDtm = new Date();
+        this.deletionDtm = new Date(Constants.MAX_DATE);
     }
 }

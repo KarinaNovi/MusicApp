@@ -22,4 +22,9 @@ public class UserControllerTest {
     void testSuccessfulGetAllUsers() throws Exception {
         this.mockMvc.perform(get("/users/all")).andDo(print()).andExpect(status().isOk());
     }
+
+    @Test
+    void testSuccessfulGetSpecificUser() throws Exception {
+        this.mockMvc.perform(get("/users/35")).andDo(print()).andExpect(status().isOk());
+    }
 }

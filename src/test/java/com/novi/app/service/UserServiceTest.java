@@ -3,15 +3,14 @@ package com.novi.app.service;
 import com.novi.app.model.User;
 import com.novi.app.service.testData.TestUser;
 import com.novi.app.util.Constants;
-import com.novi.app.util.UserUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -47,10 +46,17 @@ public class UserServiceTest {
     }
 
     @Test
-    @Rollback
     public void testPrintNewlyCreatedUsers() {
-        // TODO: create logger for such tests
-        userService.findNewlyCreatedUsers().forEach(user -> System.out.println(user.getFirstName()));
+        // TODO: create logger for output
+        Calendar testDate = new GregorianCalendar();
+        testDate.add(Calendar.MONTH, -1);
+        List<String> newUsersNames = userService
+                .findAllUsers()
+                .stream()
+                .filter(user -> testDate.getTime().before(user.getRegistrationDtm()))
+                .map(User::getUserLogin)
+                .collect(Collectors.toList());
+        Assertions.assertEquals(newUsersNames, userService.findNewlyCreatedUsers().stream().map(User::getUserLogin).toList());
     }
 
     @Test
@@ -63,17 +69,21 @@ public class UserServiceTest {
         userService.terminateUser(user);
         Optional<User> checkSuccessfulTermination = userService.findUserById(user.getUserId());
         if (checkSuccessfulTermination.isPresent()) {
-            String deletionDate = checkSuccessfulTermination.get().getDeletionDtm();
-            Assertions.assertNotEquals(deletionDate, UserUtil.formatDate(new Date(Constants.MAX_DATE)));
+            Date deletionDate = checkSuccessfulTermination.get().getDeletionDtm();
+            Assertions.assertNotEquals(deletionDate, new Date(Constants.MAX_DATE));
         }
         cleanUp(user);
     }
 
     @Test
     public void testPrintActiveUsers() {
-        // TODO: create logger for such tests
-        System.out.println(userService.findActiveUsers());
-        userService.findActiveUsers().forEach(user -> System.out.println(user.getFirstName()));
+        List<String> activeUsersNames = userService
+                .findAllUsers()
+                .stream()
+                .filter(user -> new Date(Constants.MAX_DATE).equals(user.getDeletionDtm()))
+                .map(User::getUserLogin)
+                .collect(Collectors.toList());
+        Assertions.assertEquals(activeUsersNames, userService.findActiveUsers().stream().map(User::getUserLogin).toList());
     }
 
     // clean up after test - temporary till test DB

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(user.getUserId());
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
-            userToUpdate.setDeletionDtm(UserUtil.formatDate(new Date()));
+            userToUpdate.setDeletionDtm(new Date());
             userRepository.save(userToUpdate);
         } else {
             System.out.println("WARN: No existing user with such id");
@@ -65,14 +65,11 @@ public class UserServiceImpl implements UserService {
     public List<User> findNewlyCreatedUsers() {
         Calendar currentDate = new GregorianCalendar();
         currentDate.add(Calendar.MONTH, -1);
-        String formattedDate = UserUtil.formatDate(currentDate.getTime());
-        return userRepository.findNewlyCreatedUsers(formattedDate);
+        return userRepository.findNewlyCreatedUsers(currentDate.getTime());
     }
 
     @Override
     public List<User> findActiveUsers() {
-        String formattedDate = UserUtil.formatDate(new Date(Constants.MAX_DATE));
-        return userRepository.findActiveUsers(formattedDate);
+        return userRepository.findActiveUsers(new Date(Constants.MAX_DATE));
     }
-
 }

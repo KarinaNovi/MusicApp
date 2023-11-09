@@ -14,4 +14,9 @@ public class GroupServiceTest {
     public void testPrintAllGroupsName() {
         groupService.findAllGroups().forEach(group -> System.out.println(group.getGroupName()));
     }
+
+    @Test
+    public void testGetGroupWithSpecificStyle() {
+        System.out.println(groupService.getGroupsWithMusicStyle(1));
+    }
 }

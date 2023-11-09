@@ -2,15 +2,9 @@ package com.novi.app.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 public final class UserUtil {
-    public static String formatDate(Date inputDate) {
-        SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-        return customDateFormat.format(inputDate);
-    }
 
     public static String formatName(String inputName) {
         return inputName == null

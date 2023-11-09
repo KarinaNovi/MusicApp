@@ -39,9 +39,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long userId, Model model){
-        model.addAttribute("user", userService.findUserById(userId));
-        return "users/show";
+    public ResponseEntity<Optional<User>> show(@PathVariable("id") Long userId){
+        return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
     @GetMapping("/new")
@@ -101,8 +100,8 @@ public class UserController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("userId") Long userId) {
         Optional<User> user = userService.findUserById(userId);
-        SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-        user.ifPresent(value -> value.setDeletionDtm(customDateFormat.format(new Date())));
+        //SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        user.ifPresent(value -> value.setDeletionDtm(new Date()));
         userService.deleteUser(userId);
         return "redirect:/users";
     }
