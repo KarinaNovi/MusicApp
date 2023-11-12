@@ -38,7 +38,7 @@ public class Group {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String deletionDtm;
     @Column(name = "leader_id", insertable=false, updatable=false)
-    private int leaderId;
+    private long leaderId;
     @Column(name = "repetition_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm.SSSXXX")
     private String repetitionDate;
@@ -53,10 +53,6 @@ public class Group {
             },mappedBy = "groups")
     @JsonIgnore
     Set<User> users = new HashSet<>();
-
-//    @ManyToOne
-//    @JoinColumn(name = "leader_id", nullable = false)
-//    private User groupsOfLeader;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {

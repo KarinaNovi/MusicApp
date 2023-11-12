@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    // 1 user operation
+    // single user operation
     Optional<User> findUserById(Long userId);
     void saveUser(User user);
     void updateUser(Long userId, User user);

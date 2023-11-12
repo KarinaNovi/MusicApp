@@ -56,10 +56,6 @@ public class User {
     )
     private Set<Group> groups = new HashSet<>();
 
-//    TODO: Change to method in repository - User and Group
-//    @OneToMany(fetch = FetchType.EAGER)
-//    private List<Group> groupsOfLeader;
-
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

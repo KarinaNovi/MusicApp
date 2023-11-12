@@ -1,5 +1,6 @@
 package com.novi.app.service;
 
+import com.novi.app.model.Group;
 import com.novi.app.model.User;
 import com.novi.app.service.testData.TestUser;
 import com.novi.app.util.Constants;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.query.JSqlParserUtils;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.*;
@@ -84,6 +86,38 @@ public class UserServiceTest {
                 .map(User::getUserLogin)
                 .collect(Collectors.toList());
         Assertions.assertEquals(activeUsersNames, userService.findActiveUsers().stream().map(User::getUserLogin).toList());
+    }
+
+    // Example with existing data
+    @Test
+    public void testGetGroupOfLeader() {
+        User testLeader = userService
+                .findUserById(75L)
+                .orElseThrow();
+        Set<Group> groupsOfCurrentLeader = new HashSet<>();
+        for (Group group : testLeader.getGroups()) {
+            if (testLeader.getUserId() == group.getLeaderId()) {
+                groupsOfCurrentLeader.add(group);
+            }
+        }
+        System.out.println(testLeader.getFirstName() + ": " + groupsOfCurrentLeader
+                .stream()
+                .map(Group::getGroupName).toList());
+    }
+
+    /**
+        Example for getting specific info of current user
+     */
+    @Test
+    public void testPrintGroupsOfUser() {
+        User testUser = userService
+                .findAllUsers()
+                .stream()
+                .filter(user -> !user.getGroups().isEmpty())
+                .findAny()
+                .orElseThrow();
+        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
+        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
     }
 
     // clean up after test - temporary till test DB

@@ -2,7 +2,6 @@ package com.novi.app.service.impl;
 
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
-import com.novi.app.util.UserUtil;
 import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
 import com.novi.app.model.repository.UserRepository;
