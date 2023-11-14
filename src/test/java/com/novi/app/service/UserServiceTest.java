@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.query.JSqlParserUtils;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.*;
@@ -68,7 +67,7 @@ public class UserServiceTest {
         userService.saveUser(user);
         Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
         Assertions.assertTrue(checkSuccessfulSave.isPresent());
-        userService.terminateUser(user);
+        userService.terminateUser(user.getUserId());
         Optional<User> checkSuccessfulTermination = userService.findUserById(user.getUserId());
         if (checkSuccessfulTermination.isPresent()) {
             Date deletionDate = checkSuccessfulTermination.get().getDeletionDtm();

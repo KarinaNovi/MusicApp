@@ -5,31 +5,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.novi.app.model.User;
 import com.novi.app.service.UserService;
-import com.novi.app.service.validator.UserValidator;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: align with new html, deprecated for now
+// TODO: align with new html, for now only for tests
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    private final UserValidator userValidator;
 
     @Autowired
-    public UserController(UserService userService, UserValidator userValidator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userValidator = userValidator;
     }
 
     @GetMapping("/all")
@@ -43,17 +38,14 @@ public class UserController {
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/new")
-    public String newPerson(@ModelAttribute User user){
-        return "users/new";
-    }
+//    @GetMapping("/new")
+//    public String newPerson(@ModelAttribute User user){
+//        return "users/new";
+//    }
 
-    @PostMapping()
-    public String create(@ModelAttribute("user") //@Valid
-                                     User user,
-                         BindingResult bindingResult,
-                         Model model) {
-            model.addAttribute("addUser", new User());
+    @PostMapping("/new")
+    public ResponseEntity<Optional<User>> create(@Valid @RequestBody User user,
+                                                 BindingResult bindingResult) {
             String firstName = user.getFirstName();
             String lastName = user.getLastName();
             String middleName = user.getMiddleName();
@@ -62,9 +54,9 @@ public class UserController {
             String login = user.getUserLogin();
             String password = user.getPassword();
             String birthday = user.getBirthday();
-        userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "users";
+            System.out.println("Mandatory parameter is null, check request body");
+            return new ResponseEntity<>(Optional.empty(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         user = new User(firstName,
                 lastName,
@@ -75,42 +67,39 @@ public class UserController {
                 password,
                 birthday);
         userService.saveUser(user);
-        return "redirect:/users";
+        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
     }
 
-    @GetMapping("{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long userId){
-        model.addAttribute("addUser", userService.findUserById(userId));
-        return "users/edit";
-    }
+//    @GetMapping("{id}/edit")
+//    public String edit(Model model, @PathVariable("id") Long userId){
+//        model.addAttribute("addUser", userService.findUserById(userId));
+//        return "users/edit";
+//    }
 
-    @PostMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult,
-                         @PathVariable("id") Long userId){
-        userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "users/edit";
-        }
+    @PostMapping("/updateUser/{id}")
+    public ResponseEntity<Optional<User>> update(@RequestBody User user,
+                                                 @PathVariable("id") Long userId){
+        //TODO: validate - which parameters need to be updated, which need to be taken as is
         userService.updateUser(userId, user);
-        return "redirect:/users";
+        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
     }
 
     // delete = set DeletionDtm as sysdate only
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteUser(@RequestParam("userId") Long userId) {
+    // TODO: need to switch to @RequestBody after refactoring
+    @RequestMapping(value = "/terminateUser", method = RequestMethod.POST)
+    public ResponseEntity<Optional<User>> terminateUser(@RequestParam Long userId) {
         Optional<User> user = userService.findUserById(userId);
-        //SimpleDateFormat customDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         user.ifPresent(value -> value.setDeletionDtm(new Date()));
-        userService.deleteUser(userId);
-        return "redirect:/users";
+        userService.terminateUser(userId);
+        return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
     // Not recommended physical deletion - manual corrections only!
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-    public String deleteUserFromDB(@RequestParam("userId") Long userId) {
+    @DeleteMapping(value = "/deleteUser")
+    public ResponseEntity<List<User>> deleteUser(@RequestParam Long userId) {
         userService.deleteUser(userId);
-        return "redirect:/users";
+        List<User> users = userService.findAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
 

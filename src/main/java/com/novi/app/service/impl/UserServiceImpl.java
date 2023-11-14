@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void terminateUser(User user) {
-        Optional<User> optionalUser = userRepository.findById(user.getUserId());
+    public void terminateUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
             userToUpdate.setDeletionDtm(new Date());

@@ -11,7 +11,7 @@ public interface UserService {
     void saveUser(User user);
     void updateUser(Long userId, User user);
     void deleteUser(Long userId);
-    void terminateUser(User user);
+    void terminateUser(Long userId);
 
     // Many users operation
     List<User> findAllUsers();

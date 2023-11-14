@@ -34,7 +34,6 @@ public class User {
     @NotNull
     private String birthday;
     @Column(name = "user_login")
-    @NotNull
     private String userLogin;
     @Column(name = "password", length = 256, nullable = false)
     @NotNull
