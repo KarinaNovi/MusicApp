@@ -17,6 +17,6 @@ public class GroupServiceTest {
 
     @Test
     public void testGetGroupWithSpecificStyle() {
-        System.out.println(groupService.getGroupsWithMusicStyle(1));
+        System.out.println(groupService.getGroupsWithCurrentMusicStyle(1));
     }
 }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class Group {
     private String whoNeedsDesc;
     @Column(name = "registration_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String registrationDtm;
+    private Date registrationDtm;
     @Column(name = "deleted_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
     private String deletionDtm;
@@ -95,7 +96,7 @@ public class Group {
                  int currentQuantity,
                  String whoInDesc,
                  String whoNeedsDesc,
-                 String registrationDtm,
+                 Date registrationDtm,
                  String deletionDtm,
                  String repetitionDate) {
         this.groupName = groupName;

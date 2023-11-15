@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.novi.app.model.User;
 import com.novi.app.service.UserService;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 // TODO: align with new html, for now only for tests
 @Controller
@@ -86,8 +84,8 @@ public class UserController {
 
     // delete = set DeletionDtm as sysdate only
     // TODO: need to switch to @RequestBody after refactoring
-    @RequestMapping(value = "/terminateUser", method = RequestMethod.POST)
-    public ResponseEntity<Optional<User>> terminateUser(@RequestParam Long userId) {
+    @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
+    public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
         user.ifPresent(value -> value.setDeletionDtm(new Date()));
         userService.terminateUser(userId);
@@ -95,8 +93,8 @@ public class UserController {
     }
 
     // Not recommended physical deletion - manual corrections only!
-    @DeleteMapping(value = "/deleteUser")
-    public ResponseEntity<List<User>> deleteUser(@RequestParam Long userId) {
+    @DeleteMapping(value = "/deleteUser/{id}")
+    public ResponseEntity<List<User>> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
         List<User> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);

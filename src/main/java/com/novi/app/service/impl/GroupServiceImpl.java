@@ -1,12 +1,13 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.Group;
-import com.novi.app.model.MusicStyle;
 import com.novi.app.model.repository.GroupRepository;
 import com.novi.app.service.GroupService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,11 +53,30 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> getGroupsWithMusicStyle(Integer styleId) {
-        MusicStyle musicStyle = new MusicStyle();
-        musicStyle.setStyleId(1);
-        musicStyle.setStyleName("Rock");
-        return groupRepository.getGroupsByMusicStyles(musicStyle);
+    public List<Group> getGroupsWithOnDemandMembers(int quantityOnDemandMembers) {
+        return groupRepository
+                .findAll()
+                .stream()
+                .filter(group -> (group.getMaxQuantity() - group.getCurrentQuantity()) == quantityOnDemandMembers)
+                .toList();
     }
 
+    @Override
+    public List<Group> getGroupsWithCurrentMusicStyle(int styleId) {
+        return groupRepository
+                .findAll()
+                .stream()
+                .filter(group -> !(group.getMusicStyles()
+                        .stream()
+                        .filter(musicStyle -> musicStyle.getStyleId() == styleId)
+                        .toList().isEmpty()))
+                .toList();
+    }
+
+    @Override
+    public List<Group> findNewlyCreatedGroups() {
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.add(Calendar.MONTH, -1);
+        return groupRepository.findNewlyCreatedGroups(currentDate.getTime());
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Date;
+
 @Controller
 public class GroupController {
 
@@ -30,7 +32,7 @@ public class GroupController {
         int currentQuantity = group.getCurrentQuantity();
         String whoInDesc = group.getWhoInDesc();
         String whoNeedsDesc = group.getWhoNeedsDesc();
-        String registrationDtm = String.valueOf(System.currentTimeMillis());
+        Date registrationDtm = new Date();
         // TODO: add automatic service to add max default value
         String deletionDtm = String.valueOf(1L);
         // TODO: how to get userId to set leaderId?
