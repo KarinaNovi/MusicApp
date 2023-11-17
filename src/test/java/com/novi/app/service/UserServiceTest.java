@@ -54,7 +54,7 @@ public class UserServiceTest {
         List<String> newUsersNames = userService
                 .findAllUsers()
                 .stream()
-                .filter(user -> testDate.getTime().before(user.getRegistrationDtm()))
+                .filter(user -> testDate.getTime().before(user.getRegistrationDate()))
                 .map(User::getUserLogin)
                 .collect(Collectors.toList());
         Assertions.assertEquals(newUsersNames, userService.findNewlyCreatedUsers().stream().map(User::getUserLogin).toList());
@@ -70,7 +70,7 @@ public class UserServiceTest {
         userService.terminateUser(user.getUserId());
         Optional<User> checkSuccessfulTermination = userService.findUserById(user.getUserId());
         if (checkSuccessfulTermination.isPresent()) {
-            Date deletionDate = checkSuccessfulTermination.get().getDeletionDtm();
+            Date deletionDate = checkSuccessfulTermination.get().getDeletionDate();
             Assertions.assertNotEquals(deletionDate, new Date(Constants.MAX_DATE));
         }
         cleanUp(user);
@@ -81,7 +81,7 @@ public class UserServiceTest {
         List<String> activeUsersNames = userService
                 .findAllUsers()
                 .stream()
-                .filter(user -> new Date(Constants.MAX_DATE).equals(user.getDeletionDtm()))
+                .filter(user -> new Date(Constants.MAX_DATE).equals(user.getDeletionDate()))
                 .map(User::getUserLogin)
                 .collect(Collectors.toList());
         Assertions.assertEquals(activeUsersNames, userService.findActiveUsers().stream().map(User::getUserLogin).toList());
@@ -107,17 +107,17 @@ public class UserServiceTest {
     /**
         Example for getting specific info of current user
      */
-    @Test
-    public void testPrintGroupsOfUser() {
-        User testUser = userService
-                .findAllUsers()
-                .stream()
-                .filter(user -> !user.getGroups().isEmpty())
-                .findAny()
-                .orElseThrow();
-        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
-        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
-    }
+//    @Test
+//    public void testPrintGroupsOfUser() {
+//        User testUser = userService
+//                .findAllUsers()
+//                .stream()
+//                .filter(user -> !user.getGroups().isEmpty())
+//                .findAny()
+//                .orElseThrow();
+//        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
+//        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
+//    }
 
     // clean up after test - temporary till test DB
     public void cleanUp(User user) {

@@ -7,12 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.List;
 
 @Entity
-@Table(name = "location")
+@Table(name = "locations")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -33,9 +32,8 @@ public class Location {
     private String description;
     @Column(name = "price")
     private double price;
-    @Column(name = "repetition_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy'T'HH:mm:ss.SSSXXX")
-    private String repetitionDate;
+    @Column(name = "repetition_dtm")
+    private String repetitionDtm;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -47,17 +45,17 @@ public class Location {
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "music_instruments_location",
-            joinColumns = { @JoinColumn(name = "location_location_id") },
-            inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
+            name = "music_instruments_locations",
+            joinColumns = { @JoinColumn(name = "location_id") },
+            inverseJoinColumns = { @JoinColumn(name = "instrument_id") }
     )
     private List<MusicInstrument> musicInstruments;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "music_style_location",
-            joinColumns = { @JoinColumn(name = "location_location_id") },
-            inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
+            name = "music_styles_locations",
+            joinColumns = { @JoinColumn(name = "location_id") },
+            inverseJoinColumns = { @JoinColumn(name = "style_id") }
     )
     private List<MusicStyle> musicStyles;
 }

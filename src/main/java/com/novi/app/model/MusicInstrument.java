@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -48,4 +49,12 @@ public class MusicInstrument {
             },mappedBy = "musicInstruments")
     @JsonIgnore
     private Set<User> users;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "music_styles_instruments",
+            joinColumns = { @JoinColumn(name = "instrument_id") },
+            inverseJoinColumns = { @JoinColumn(name = "style_id") }
+    )
+    private List<MusicStyle> musicStyles;
 }

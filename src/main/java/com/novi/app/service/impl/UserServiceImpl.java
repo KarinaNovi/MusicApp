@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User userToUpdate = optionalUser.get();
-            userToUpdate.setDeletionDtm(new Date());
+            userToUpdate.setDeletionDate(new Date());
             userRepository.save(userToUpdate);
         } else {
             System.out.println("WARN: No existing user with such id");

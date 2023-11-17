@@ -87,7 +87,7 @@ public class UserController {
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
-        user.ifPresent(value -> value.setDeletionDtm(new Date()));
+        user.ifPresent(value -> value.setDeletionDate(new Date()));
         userService.terminateUser(userId);
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }

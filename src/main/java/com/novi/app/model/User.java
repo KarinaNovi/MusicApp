@@ -38,10 +38,10 @@ public class User {
     @Column(name = "password", length = 256, nullable = false)
     @NotNull
     private String password;
-    @Column(name = "registration_dtm")
-    private Date registrationDtm;
-    @Column(name = "deletion_dtm")
-    private Date deletionDtm;
+    @Column(name = "registration_date")
+    private Date registrationDate;
+    @Column(name = "deletion_date")
+    private Date deletionDate;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -50,8 +50,8 @@ public class User {
             })
     @JoinTable(
             name = "groups_users",
-            joinColumns = { @JoinColumn(name = "users_user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "groups_group_id") }
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "group_id") }
     )
     private Set<Group> groups = new HashSet<>();
 
@@ -62,8 +62,8 @@ public class User {
             })
     @JoinTable(
             name = "music_instruments_users",
-            joinColumns = { @JoinColumn(name = "users_user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "music_instruments_instrument_id") }
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "instrument_id") }
     )
     private Set<MusicInstrument> musicInstruments = new HashSet<>();
 
@@ -73,9 +73,9 @@ public class User {
                     CascadeType.MERGE
             })
     @JoinTable(
-            name = "music_style_users",
-            joinColumns = { @JoinColumn(name = "users_user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "music_style_style_id") }
+            name = "music_styles_users",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "style_id") }
     )
     private Set<MusicStyle> musicStyles = new HashSet<>();
 
@@ -96,7 +96,7 @@ public class User {
         this.password = UserUtil.encryptPassword(password);
         // TODO: format will be updated on UI side?
         this.birthday = birthday;
-        this.registrationDtm = new Date();
-        this.deletionDtm = new Date(Constants.MAX_DATE);
+        this.registrationDate = new Date();
+        this.deletionDate = new Date(Constants.MAX_DATE);
     }
 }

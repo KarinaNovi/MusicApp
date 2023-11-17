@@ -11,7 +11,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "music_style")
+@Table(name = "music_styles")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -48,4 +48,12 @@ public class MusicStyle {
             },mappedBy = "musicStyles")
     @JsonIgnore
     private List<Location> locations;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "musicStyles")
+    @JsonIgnore
+    private List<MusicInstrument> musicInstruments;
 }
