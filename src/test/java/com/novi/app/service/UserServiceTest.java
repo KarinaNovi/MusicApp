@@ -107,17 +107,17 @@ public class UserServiceTest {
     /**
         Example for getting specific info of current user
      */
-//    @Test
-//    public void testPrintGroupsOfUser() {
-//        User testUser = userService
-//                .findAllUsers()
-//                .stream()
-//                .filter(user -> !user.getGroups().isEmpty())
-//                .findAny()
-//                .orElseThrow();
-//        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
-//        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
-//    }
+    @Test
+    public void testPrintGroupsOfUser() {
+        User testUser = userService
+                .findAllUsers()
+                .stream()
+                .filter(user -> !user.getGroups().isEmpty())
+                .findAny()
+                .orElseThrow();
+        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
+        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
+    }
 
     // clean up after test - temporary till test DB
     public void cleanUp(User user) {
