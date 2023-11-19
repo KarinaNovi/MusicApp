@@ -90,16 +90,9 @@ public class UserServiceTest {
     // Example with existing data
     @Test
     public void testGetGroupOfLeader() {
-        User testLeader = userService
-                .findUserById(75L)
-                .orElseThrow();
-        Set<Group> groupsOfCurrentLeader = new HashSet<>();
-        for (Group group : testLeader.getGroups()) {
-            if (testLeader.getUserId() == group.getLeaderId()) {
-                groupsOfCurrentLeader.add(group);
-            }
-        }
-        System.out.println(testLeader.getFirstName() + ": " + groupsOfCurrentLeader
+        User user = userService.findUserById(75L).orElseThrow();
+        Set<Group> groupsOfCurrentLeader = userService.getGroupsOfLeader(75L);
+        System.out.println(user.getFirstName() + ": " + groupsOfCurrentLeader
                 .stream()
                 .map(Group::getGroupName).toList());
     }
@@ -115,8 +108,13 @@ public class UserServiceTest {
                 .filter(user -> !user.getGroups().isEmpty())
                 .findAny()
                 .orElseThrow();
-        Set<Group> groups = userService.findUserById(testUser.getUserId()).orElseThrow().getGroups();
+        Set<Group> groups = userService.getUserGroups(testUser.getUserId());
         System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
+    }
+
+    @Test
+    public void testGetUsersWithSpecificStyle() {
+        System.out.println(userService.getUsersWithCurrentMusicStyle(1));
     }
 
     // clean up after test - temporary till test DB

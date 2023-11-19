@@ -48,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
         if (optionalGroup.isPresent()) {
             groupRepository.save(group);
         } else {
-            System.out.println("WARN: No existing user with such id");
+            System.out.println("WARN: No existing group with such id");
         }
     }
 

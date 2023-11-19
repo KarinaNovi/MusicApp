@@ -1,5 +1,8 @@
 package com.novi.app.controller;
 
+import com.novi.app.model.Group;
+import com.novi.app.model.MusicInstrument;
+import com.novi.app.model.MusicStyle;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +35,28 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> show(@PathVariable("id") Long userId){
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/groups")
+    public ResponseEntity<Set<Group>> getUserGroups(@PathVariable("id") Long userId){
+        return new ResponseEntity<>(userService.getUserGroups(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/styles")
+    public ResponseEntity<Set<MusicStyle>> getUserMusicStyles(@PathVariable("id") Long userId){
+        return new ResponseEntity<>(userService.getUserMusicStyles(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/instruments")
+    public ResponseEntity<Set<MusicInstrument>> getUserMusicInstruments(@PathVariable("id") Long userId){
+        return new ResponseEntity<>(userService.getUserMusicInstruments(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/leaderGroups")
+    public ResponseEntity<Set<Group>> getLeaderGroups(@PathVariable("id") Long userId){
+        return new ResponseEntity<>(userService.getGroupsOfLeader(userId), HttpStatus.OK);
     }
 
 //    @GetMapping("/new")
@@ -65,7 +88,7 @@ public class UserController {
                 password,
                 birthday);
         userService.saveUser(user);
-        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.CREATED);
     }
 
 //    @GetMapping("{id}/edit")
@@ -76,14 +99,13 @@ public class UserController {
 
     @PostMapping("/updateUser/{id}")
     public ResponseEntity<Optional<User>> update(@RequestBody User user,
-                                                 @PathVariable("id") Long userId){
+                                                 @PathVariable("id") Long userId) {
         //TODO: validate - which parameters need to be updated, which need to be taken as is
         userService.updateUser(userId, user);
         return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
     }
 
-    // delete = set DeletionDtm as sysdate only
-    // TODO: need to switch to @RequestBody after refactoring
+    // delete = set deletionDate as sysdate only
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
@@ -99,7 +121,23 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    /**
+     * Many users operations
+     */
+    @GetMapping("/activeUsers")
+    public ResponseEntity<List<User>> getActiveUsers() {
+        return new ResponseEntity<>(userService.findActiveUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/newUsers")
+    public ResponseEntity<List<User>> getNewUsers() {
+        return new ResponseEntity<>(userService.findNewlyCreatedUsers(), HttpStatus.OK);
+    }
+
+    // TODO: move to musicController: /styles/{1}/users
+    @GetMapping("/usersWithStyle/{id}")
+    public ResponseEntity<List<User>> getUsersOfCurrentMusicStyle(@PathVariable("id") Integer musicStyleId) {
+        return new ResponseEntity<>(userService.getUsersWithCurrentMusicStyle(musicStyleId), HttpStatus.OK);
+    }
 }
-
-
-
