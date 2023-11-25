@@ -16,6 +16,11 @@ public class GroupServiceTest {
     }
 
     @Test
+    public void testGetGroupsWithOnDemandMembers() {
+        groupService.getGroupsWithOnDemandMembers(1).forEach(group -> System.out.println(group.getGroupName()));
+    }
+
+    @Test
     public void testGetGroupWithSpecificStyle() {
         System.out.println(groupService.getGroupsWithCurrentMusicStyle(1));
     }
