@@ -6,14 +6,12 @@ import com.novi.app.model.MusicStyle;
 import com.novi.app.model.User;
 import com.novi.app.model.repository.GroupRepository;
 import com.novi.app.service.GroupService;
+import com.novi.app.util.Constants;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.constant.Constable;
 import java.util.*;
 
 @Service
-@Transactional
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
@@ -31,6 +29,18 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void saveGroup(Group group) {
         groupRepository.save(group);
+    }
+
+    @Override
+    public void terminateGroup(Long groupId) {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        if (optionalGroup.isPresent()) {
+            Group groupToUpdate = optionalGroup.get();
+            groupToUpdate.setDeletionDate(new Date());
+            groupRepository.save(groupToUpdate);
+        } else {
+            System.out.println("WARN: No existing group with such id");
+        }
     }
 
     @Override
@@ -99,6 +109,7 @@ public class GroupServiceImpl implements GroupService {
     public void updateGroup(Long groupId, Group group) {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isPresent()) {
+            group.setGroupId(groupId);
             groupRepository.save(group);
         } else {
             System.out.println("WARN: No existing group with such id");
@@ -131,5 +142,10 @@ public class GroupServiceImpl implements GroupService {
         Calendar currentDate = new GregorianCalendar();
         currentDate.add(Calendar.MONTH, -1);
         return groupRepository.findNewlyCreatedGroups(currentDate.getTime());
+    }
+
+    @Override
+    public List<Group> findActiveGroups() {
+        return groupRepository.findActiveGroups(new Date(Constants.MAX_DATE));
     }
 }

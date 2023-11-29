@@ -92,6 +92,8 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long userId, User user) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
+            // TODO: how to update only changed fields and don't perform saving of potential incorrect user from UI?
+            user.setUserId(userId);
             userRepository.save(user);
         } else {
             System.out.println("WARN: No existing user with such id");

@@ -1,6 +1,8 @@
 package com.novi.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.novi.app.util.Constants;
+import com.novi.app.util.UserUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -33,7 +35,7 @@ public class Group {
     private Date registrationDate;
     @Column(name = "deletion_date")
     private Date deletionDate;
-    @Column(name = "leader_id", insertable=false, updatable=false)
+    @Column(name = "leader_id", nullable = false)
     private long leaderId;
     @Column(name = "repetition_dtm")
     private Date repetitionDtm;
@@ -89,15 +91,17 @@ public class Group {
                  int maxQuantity,
                  int currentQuantity,
                  String description,
-                 Date registrationDate,
-                 Date deletionDate,
-                 Date repetitionDtm) {
+                 Date repetitionDtm,
+                 String password,
+                 long leaderId) {
         this.groupName = groupName;
         this.maxQuantity = maxQuantity;
         this.currentQuantity = currentQuantity;
         this.description = description;
-        this.registrationDate = registrationDate;
-        this.deletionDate = deletionDate;
+        this.registrationDate = new Date();
+        this.deletionDate = new Date(Constants.MAX_DATE);
         this.repetitionDtm = repetitionDtm;
+        this.password = UserUtil.encryptPassword(password);
+        this.leaderId = leaderId;
     }
 }

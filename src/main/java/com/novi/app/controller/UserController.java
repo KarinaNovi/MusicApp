@@ -67,14 +67,14 @@ public class UserController {
     @PostMapping("/new")
     public ResponseEntity<Optional<User>> create(@Valid @RequestBody User user,
                                                  BindingResult bindingResult) {
-            String firstName = user.getFirstName();
-            String lastName = user.getLastName();
-            String middleName = user.getMiddleName();
-            String phoneNumber = user.getPhoneNumber();
-            String email = user.getEmail();
-            String login = user.getUserLogin();
-            String password = user.getPassword();
-            String birthday = user.getBirthday();
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        String middleName = user.getMiddleName();
+        String phoneNumber = user.getPhoneNumber();
+        String email = user.getEmail();
+        String login = user.getUserLogin();
+        String password = user.getPassword();
+        String birthday = user.getBirthday();
         if (bindingResult.hasErrors()) {
             System.out.println("Mandatory parameter is null, check request body");
             return new ResponseEntity<>(Optional.empty(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -105,7 +105,7 @@ public class UserController {
         return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
     }
 
-    // delete = set deletionDate as sysdate only
+    // terminate = set deletionDate as sysdate only
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
