@@ -56,4 +56,8 @@ public class MusicStyle {
             },mappedBy = "musicStyles")
     @JsonIgnore
     private List<MusicInstrument> musicInstruments;
+
+    public MusicStyle(@NotNull String styleName) {
+        this.styleName = styleName;
+    }
 }
