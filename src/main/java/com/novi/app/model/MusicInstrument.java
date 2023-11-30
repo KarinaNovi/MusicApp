@@ -57,4 +57,8 @@ public class MusicInstrument {
             inverseJoinColumns = { @JoinColumn(name = "style_id") }
     )
     private List<MusicStyle> musicStyles;
+
+    public MusicInstrument(@NotNull String instrumentName) {
+        this.instrumentName = instrumentName;
+    }
 }
