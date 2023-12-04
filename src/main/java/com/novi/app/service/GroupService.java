@@ -1,9 +1,6 @@
 package com.novi.app.service;
 
-import com.novi.app.model.Group;
-import com.novi.app.model.MusicInstrument;
-import com.novi.app.model.MusicStyle;
-import com.novi.app.model.User;
+import com.novi.app.model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +13,7 @@ public interface GroupService {
     Set<User> getGroupMembers(Long groupId);
     Set<MusicStyle> getGroupMusicStyles(Long groupId);
     Set<MusicInstrument> getGroupMusicInstruments(Long groupId);
+    Set<Location> getGroupLocations(Long groupId);
     // TODO: think about this result - maybe trigger userService for getting user's info
     Long getGroupLeaderId(Long groupId);
 

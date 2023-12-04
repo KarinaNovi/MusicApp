@@ -17,7 +17,7 @@ import com.novi.app.service.UserService;
 import java.util.*;
 
 // TODO: align with new html, for now only for tests
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 

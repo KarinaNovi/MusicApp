@@ -1,9 +1,6 @@
 package com.novi.app.controller;
 
-import com.novi.app.model.MusicInstrument;
-import com.novi.app.model.MusicStyle;
-import com.novi.app.model.Group;
-import com.novi.app.model.User;
+import com.novi.app.model.*;
 import com.novi.app.service.GroupService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -39,7 +36,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/users")
-    public ResponseEntity<Set<User>> getGroupGroups(@PathVariable("id") Long groupId){
+    public ResponseEntity<Set<User>> getGroupMembers(@PathVariable("id") Long groupId){
         return new ResponseEntity<>(groupService.getGroupMembers(groupId), HttpStatus.OK);
     }
 
@@ -51,6 +48,11 @@ public class GroupController {
     @GetMapping("/{id}/instruments")
     public ResponseEntity<Set<MusicInstrument>> getGroupMusicInstruments(@PathVariable("id") Long groupId){
         return new ResponseEntity<>(groupService.getGroupMusicInstruments(groupId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/locations")
+    public ResponseEntity<Set<Location>> getGroupLocations(@PathVariable("id") Long groupId){
+        return new ResponseEntity<>(groupService.getGroupLocations(groupId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/leaderInfo")

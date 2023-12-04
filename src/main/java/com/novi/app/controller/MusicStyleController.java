@@ -1,9 +1,6 @@
 package com.novi.app.controller;
 
-import com.novi.app.model.Group;
-import com.novi.app.model.MusicInstrument;
-import com.novi.app.model.MusicStyle;
-import com.novi.app.model.User;
+import com.novi.app.model.*;
 import com.novi.app.service.MusicStyleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -52,6 +49,11 @@ public class MusicStyleController {
         return new ResponseEntity<>(musicStyleService.getMusicStyleMusicInstruments(musicStyleId), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/locations")
+    public ResponseEntity<Set<Location>> getMusicStyleLocations(@PathVariable("id") Integer musicStyleId){
+        return new ResponseEntity<>(musicStyleService.getMusicStyleLocations(musicStyleId), HttpStatus.OK);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Optional<MusicStyle>> create(@Valid @RequestBody MusicStyle musicStyle,
                                                  BindingResult bindingResult) {
@@ -68,7 +70,6 @@ public class MusicStyleController {
     @PostMapping("/updateMusicStyle/{id}")
     public ResponseEntity<Optional<MusicStyle>> update(@RequestBody MusicStyle musicStyle,
                                                  @PathVariable("id") Integer musicStyleId) {
-        //TODO: validate - which parameters need to be updated, which need to be taken as is
         musicStyleService.updateMusicStyle(musicStyleId, musicStyle);
         return new ResponseEntity<>(musicStyleService.findMusicStyleById(musicStyle.getStyleId()), HttpStatus.OK);
     }

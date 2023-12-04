@@ -3,7 +3,6 @@ package com.novi.app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,12 +13,11 @@ import java.util.List;
 @Table(name = "music_styles")
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class MusicStyle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int styleId;
     @Column(name = "style_name", length = 256, nullable = false)
     @NotNull

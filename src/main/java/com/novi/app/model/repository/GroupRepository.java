@@ -1,7 +1,6 @@
 package com.novi.app.model.repository;
 
 import com.novi.app.model.Group;
-import com.novi.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

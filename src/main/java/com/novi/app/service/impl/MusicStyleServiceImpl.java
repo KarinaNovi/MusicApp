@@ -93,8 +93,9 @@ public class MusicStyleServiceImpl implements MusicStyleService {
     public void updateMusicStyle(Integer musicStyleId, MusicStyle musicStyle) {
         Optional<MusicStyle> optionalMusicStyle = musicStyleRepository.findById(musicStyleId);
         if (optionalMusicStyle.isPresent()) {
-            musicStyle.setStyleId(musicStyleId);
-            musicStyleRepository.save(musicStyle);
+            MusicStyle updateMusicStyle = optionalMusicStyle.get();
+            updateMusicStyle.setStyleName(musicStyle.getStyleName());
+            musicStyleRepository.save(updateMusicStyle);
         } else {
             System.out.println("WARN: No existing musicStyle with such id");
         }

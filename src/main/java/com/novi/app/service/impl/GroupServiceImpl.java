@@ -1,9 +1,6 @@
 package com.novi.app.service.impl;
 
-import com.novi.app.model.Group;
-import com.novi.app.model.MusicInstrument;
-import com.novi.app.model.MusicStyle;
-import com.novi.app.model.User;
+import com.novi.app.model.*;
 import com.novi.app.model.repository.GroupRepository;
 import com.novi.app.service.GroupService;
 import com.novi.app.util.Constants;
@@ -85,6 +82,19 @@ public class GroupServiceImpl implements GroupService {
             System.out.println("WARN: No existing group with such id");
         }
         return musicInstruments;
+    }
+
+    @Override
+    public Set<Location> getGroupLocations(Long groupId) {
+        Optional<Group> optionalGroup = findGroupById(groupId);
+        Set<Location> locations = new HashSet<>();
+        if (optionalGroup.isPresent()) {
+            Group group = optionalGroup.get();
+            locations.addAll(group.getLocations());
+        } else {
+            System.out.println("WARN: No existing group with such id");
+        }
+        return locations;
     }
 
     // TODO: maybe return user from userService

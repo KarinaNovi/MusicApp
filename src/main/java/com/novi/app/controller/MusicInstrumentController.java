@@ -50,6 +50,11 @@ public class MusicInstrumentController {
         return new ResponseEntity<>(musicInstrumentService.getMusicInstrumentMusicStyles(musicInstrumentId), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/locations")
+    public ResponseEntity<Set<Location>> getMusicInstrumentLocations(@PathVariable("id") Integer musicInstrumentId){
+        return new ResponseEntity<>(musicInstrumentService.getMusicInstrumentLocations(musicInstrumentId), HttpStatus.OK);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Optional<MusicInstrument>> create(@Valid @RequestBody MusicInstrument musicInstrument,
                                                  BindingResult bindingResult) {

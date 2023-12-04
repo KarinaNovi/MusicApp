@@ -3,24 +3,23 @@ package com.novi.app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "locations")
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int locationId;
+    private long locationId;
     @Column(name = "location_name", length = 256, nullable = false)
     @NotNull
     private String locationName;
@@ -33,7 +32,7 @@ public class Location {
     @Column(name = "price")
     private double price;
     @Column(name = "repetition_dtm")
-    private String repetitionDtm;
+    private Date repetitionDtm;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -58,4 +57,18 @@ public class Location {
             inverseJoinColumns = { @JoinColumn(name = "style_id") }
     )
     private List<MusicStyle> musicStyles;
+
+    public Location(@NotNull String locationName,
+                    double xCoordinate,
+                    double yCoordinate,
+                    String description,
+                    double price,
+                    Date repetitionDtm) {
+        this.locationName = locationName;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
+        this.description = description;
+        this.price = price;
+        this.repetitionDtm = repetitionDtm;
+    }
 }
