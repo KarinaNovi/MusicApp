@@ -2,8 +2,10 @@ package com.novi.app.model;
 
 import com.novi.app.util.Constants;
 import com.novi.app.util.UserUtil;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.*;
@@ -13,36 +15,67 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@Schema(description = "Информация о пользователе")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Идентификатор")
+    @Min(1)
+    @Max(999999999)
     private long userId;
+
+    @Schema(description = "Имя")
+    @NotBlank
+    @Size(min = 1, max = 50)
     @Column(name = "first_name", length = 50, nullable = false)
-    @NotNull
     private String firstName;
+
+    @Schema(description = "Фамилия")
+    @NotBlank
+    @Size(min = 1, max = 50)
     @Column(name = "last_name", length = 50, nullable = false)
-    @NotNull
     private String lastName;
-    @Column(name = "middle_name", length = 50)
+
+    @Schema(description = "Отчество")
+    @Size(min = 1, max = 100)
+    @Column(name = "middle_name", length = 100)
     private String middleName;
+
+    @Schema(description = "Номер телефона")
+    @Size(min = 1, max = 20)
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
+
+    @Schema(description = "E-mail")
+    @NotBlank
+    @Size(min = 1, max = 64)
     @Column(name = "email", length = 64, nullable = false)
-    @NotNull
     private String email;
+
+    @Schema(description = "Дата рождения")
+    @NotBlank
     @Column(name = "birthday", nullable = false)
-    @NotNull
     private String birthday;
+
+    @Schema(description = "Логин")
     @Column(name = "user_login")
     private String userLogin;
+
+    @Schema(description = "Пароль")
+    @NotBlank
+    @Size(min = 1, max = 256)
     @Column(name = "password", length = 256, nullable = false)
-    @NotNull
     private String password;
+
+    @Schema(description = "Дата регистрации")
     @Column(name = "registration_date")
     private Date registrationDate;
+
+    @Schema(description = "Дата удаления")
     @Column(name = "deletion_date")
     private Date deletionDate;
 
+    @Hidden
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -55,6 +88,7 @@ public class User {
     )
     private Set<Group> groups = new HashSet<>();
 
+    @Hidden
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -67,6 +101,7 @@ public class User {
     )
     private Set<MusicInstrument> musicInstruments = new HashSet<>();
 
+    @Hidden
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

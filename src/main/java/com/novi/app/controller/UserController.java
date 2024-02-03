@@ -3,11 +3,13 @@ package com.novi.app.controller;
 import com.novi.app.model.Group;
 import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,10 @@ import java.util.*;
 // TODO: align with new html, for now only for tests
 @RestController
 @RequestMapping("/users")
+@Tag(
+        name = "Пользователи",
+        description = "Все методы для работы с пользователями системы"
+)
 public class UserController {
 
     private final UserService userService;
@@ -28,34 +34,45 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Получить информацию о пользователях")
     @GetMapping("/all")
     public ResponseEntity<List<User>> index(){
         List<User> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @Operation(summary = "Получить информацию о пользователе по его id")
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<Optional<User>> getUserById(@Parameter(description = "id пользователя")
+                                                      @PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Получить информацию о группах пользователя")
     @GetMapping("/{id}/groups")
-    public ResponseEntity<Set<Group>> getUserGroups(@PathVariable("id") Long userId){
+    public ResponseEntity<Set<Group>> getUserGroups(@Parameter(description = "id пользователя")
+                                                    @PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.getUserGroups(userId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Получить информацию о музыкальных стилях пользователя")
     @GetMapping("/{id}/styles")
-    public ResponseEntity<Set<MusicStyle>> getUserMusicStyles(@PathVariable("id") Long userId){
+    public ResponseEntity<Set<MusicStyle>> getUserMusicStyles(@Parameter(description = "id пользователя")
+                                                              @PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.getUserMusicStyles(userId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Получить информацию о музыкальных инструментах пользователя")
     @GetMapping("/{id}/instruments")
-    public ResponseEntity<Set<MusicInstrument>> getUserMusicInstruments(@PathVariable("id") Long userId){
+    public ResponseEntity<Set<MusicInstrument>> getUserMusicInstruments(@Parameter(description = "id пользователя")
+                                                                        @PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.getUserMusicInstruments(userId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Получить информацию о группах лидера")
     @GetMapping("/{id}/leaderGroups")
-    public ResponseEntity<Set<Group>> getLeaderGroups(@PathVariable("id") Long userId){
+    public ResponseEntity<Set<Group>> getLeaderGroups(@Parameter(description = "id пользователя")
+                                                      @PathVariable("id") Long userId){
         return new ResponseEntity<>(userService.getGroupsOfLeader(userId), HttpStatus.OK);
     }
 
@@ -64,6 +81,7 @@ public class UserController {
 //        return "users/new";
 //    }
 
+    @Operation(summary = "Создать нового пользователя")
     @PostMapping("/new")
     public ResponseEntity<Optional<User>> create(@Valid @RequestBody User user,
                                                  BindingResult bindingResult) {
