@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    @Query(value = "SELECT * FROM LOCATIONS WHERE trunc(repetition_dtm) = :date", nativeQuery = true)
-    // TODO: date should be trunc to days
-    List<Location> findLocationsWithRepetitionToday(@Param("date") Date date);
+    @Query(value = "SELECT * FROM LOCATIONS WHERE repetition_dtm >= current_date", nativeQuery = true)
+    List<Location> findLocationsWithRepetitionToday();
 }

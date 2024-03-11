@@ -49,7 +49,17 @@ public class UserControllerTest {
     public void testCreateUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users/new")
-                        .content(asJsonString(TestUser.createSimpleUser()))
+                        //TODO: can be formatted into request body in json format
+                        .content("""
+                                {
+                                    "firstName": "Test",
+                                    "lastName": "WithoutLogin",
+                                    "middleName": null,
+                                    "phoneNumber": "89803489886",
+                                    "email": "1@mail.com",
+                                    "birthday": "1940-12-09",
+                                    "password": "12345"
+                                }""")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

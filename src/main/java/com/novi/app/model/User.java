@@ -20,8 +20,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Идентификатор")
-    @Min(1)
-    @Max(999999999)
     private long userId;
 
     @Schema(description = "Имя")

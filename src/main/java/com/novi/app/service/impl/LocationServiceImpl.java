@@ -89,8 +89,6 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<Location> findLocationsWithRepetitionToday() {
-        Calendar currentDate = new GregorianCalendar();
-        currentDate.add(Calendar.DAY_OF_YEAR, -1);
-        return locationRepository.findLocationsWithRepetitionToday(currentDate.getTime());
+        return locationRepository.findLocationsWithRepetitionToday();
     }
 }
