@@ -4,6 +4,7 @@ import com.novi.app.model.Group;
 import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
 import com.novi.app.model.User;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +21,11 @@ public interface UserService {
 
     // update info
     void saveUser(User user);
+    @PreAuthorize("hasRole('USER')")
     void updateUser(Long userId, User user);
+    @PreAuthorize("hasRole('ADMIN')")
     void deleteUser(Long userId);
+    @PreAuthorize("hasRole('ADMIN')")
     void terminateUser(Long userId);
 
     // Many users operation

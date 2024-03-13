@@ -17,6 +17,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+// @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Group {
 
     @Id

@@ -56,7 +56,7 @@ public class User {
     private String birthday;
 
     @Schema(description = "Логин")
-    @Column(name = "user_login")
+    @Column(name = "user_login", unique=true)
     private String userLogin;
 
     @Schema(description = "Пароль")
@@ -72,6 +72,12 @@ public class User {
     @Schema(description = "Дата удаления")
     @Column(name = "deletion_date")
     private Date deletionDate;
+
+    @Schema(description = "Роль")
+    @NotBlank
+    @Size(min = 1, max = 256)
+    @Column(name = "user_role", length = 256, nullable = false)
+    private String userRole;
 
     @Hidden
     @ManyToMany(fetch = FetchType.LAZY,
@@ -112,6 +118,8 @@ public class User {
     )
     private Set<MusicStyle> musicStyles = new HashSet<>();
 
+    // If you have multiple constructors in your class, you have to use the @Autowired annotation
+    // to define which constructor is used for dependency injection:
     public User(@NotNull String firstName,
                 @NotNull String lastName,
                 String middleName,

@@ -5,6 +5,11 @@ import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.novi.app.model.User;
 import com.novi.app.model.repository.UserRepository;
@@ -12,8 +17,10 @@ import com.novi.app.model.repository.UserRepository;
 import java.util.*;
 
 @Service
-public class UserServiceImpl implements UserService {
-    //TODO: add logger
+public class UserServiceImpl implements UserService, UserDetailsService {
+    private static final Logger logger = LoggerFactory.getLogger(
+            UserServiceImpl.class
+    );
 
     private final UserRepository userRepository;
 
@@ -40,7 +47,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             userGroups.addAll(user.getGroups());
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
         return userGroups;
     }
@@ -53,7 +60,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             musicStyles.addAll(user.getMusicStyles());
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
         return musicStyles;
     }
@@ -66,7 +73,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             musicInstruments.addAll(user.getMusicInstruments());
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
         return musicInstruments;
     }
@@ -83,7 +90,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
         return groupsOfCurrentLeader;
     }
@@ -96,7 +103,7 @@ public class UserServiceImpl implements UserService {
             user.setUserId(userId);
             userRepository.save(user);
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
     }
 
@@ -118,7 +125,7 @@ public class UserServiceImpl implements UserService {
             userToUpdate.setDeletionDate(new Date());
             userRepository.save(userToUpdate);
         } else {
-            System.out.println("WARN: No existing user with such id");
+            logger.warn("WARN: No existing user with such id");
         }
     }
 
@@ -145,5 +152,22 @@ public class UserServiceImpl implements UserService {
                         .filter(musicStyle -> musicStyle.getStyleId() == styleId)
                         .toList().isEmpty()))
                 .toList();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userLogin) throws
+            UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUserLogin(userLogin);
+        org.springframework.security.core.userdetails.User.UserBuilder builder;
+        if (user.isPresent()) {
+            User currentUser = user.get();
+            builder = org.springframework.security.core.userdetails.
+                    User.withUsername(userLogin);
+            builder.password(currentUser.getPassword());
+            builder.roles(currentUser.getUserRole());
+        } else {
+            throw new UsernameNotFoundException("User not found.");
+        }
+        return builder.build();
     }
 }
