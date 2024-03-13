@@ -24,10 +24,11 @@ public class JwtService {
     // 1 day in ms. Should be shorter in production.
     static final String PREFIX = "Bearer";
 
-    // Generate secret key. Only for demonstration purposes.
+// Generate secret key. Only for demonstration purposes.
 // In production, you should read it from the application
 // configuration.
-    static final Key key = Keys.secretKeyFor (SignatureAlgorithm.
+// Byte Array should be like this: b5f59337a612a2a7dc07328f3e7d1a04722967c7f06df20a499a7d3f91ff2a7e
+    static final Key key = Keys.secretKeyFor(SignatureAlgorithm.
             HS256);
     // Generate signed JWT token
     public String getToken(String username) {

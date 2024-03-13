@@ -1,5 +1,6 @@
 package com.novi.app.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.novi.app.util.Constants;
 import com.novi.app.util.UserUtil;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -12,8 +13,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Schema(description = "Информация о пользователе")
 public class User {
@@ -63,6 +63,7 @@ public class User {
     @NotBlank
     @Size(min = 1, max = 256)
     @Column(name = "password", length = 256, nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Schema(description = "Дата регистрации")
@@ -74,9 +75,7 @@ public class User {
     private Date deletionDate;
 
     @Schema(description = "Роль")
-    @NotBlank
-    @Size(min = 1, max = 256)
-    @Column(name = "user_role", length = 256, nullable = false)
+    @Column(name = "user_role", length = 10, nullable = false)
     private String userRole;
 
     @Hidden
@@ -135,9 +134,15 @@ public class User {
         this.email = email;
         this.userLogin = UserUtil.formatUserLogin(userLogin);
         this.password = UserUtil.encryptPassword(password);
+        this.userRole = String.valueOf(UserRole.USER);
         // TODO: format will be updated on UI side?
         this.birthday = birthday;
         this.registrationDate = new Date();
         this.deletionDate = new Date(Constants.MAX_DATE);
+    }
+
+    @ToString.Include(name = "password")
+    private String maskPassword() {
+        return "********";
     }
 }

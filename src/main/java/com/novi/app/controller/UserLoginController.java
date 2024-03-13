@@ -21,6 +21,7 @@ public class UserLoginController {
         this.authenticationManager = authenticationManager;
     }
 
+    //TODO: add register
     @PostMapping("/login")
     public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
         UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.username(),

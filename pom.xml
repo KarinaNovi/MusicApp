@@ -62,6 +62,7 @@
             </exclusions>
         </dependency>
 
+        <!-- testRuntimeOnly 'com.h2database:h2' - separate DB for test ability-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

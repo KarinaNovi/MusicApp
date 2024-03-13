@@ -21,11 +21,8 @@ public interface UserService {
 
     // update info
     void saveUser(User user);
-    @PreAuthorize("hasRole('USER')")
     void updateUser(Long userId, User user);
-    @PreAuthorize("hasRole('ADMIN')")
     void deleteUser(Long userId);
-    @PreAuthorize("hasRole('ADMIN')")
     void terminateUser(Long userId);
 
     // Many users operation

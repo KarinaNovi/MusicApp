@@ -14,6 +14,7 @@ public final class TestUser {
         String password = "12345";
         String birthday = String.valueOf(LocalDate.of(1997,9,21));
         return new User(firstName,lastName,null,phoneNumber,email,null,password,birthday);
+
     }
 
     public static User updateSimpleUser(long userId) {

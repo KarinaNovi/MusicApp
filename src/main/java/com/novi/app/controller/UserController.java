@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,6 +116,7 @@ public class UserController {
 //        return "users/edit";
 //    }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/updateUser/{id}")
     public ResponseEntity<Optional<User>> update(@RequestBody User user,
                                                  @PathVariable("id") Long userId) {
@@ -124,6 +126,7 @@ public class UserController {
     }
 
     // terminate = set deletionDate as sysdate only
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
@@ -133,6 +136,7 @@ public class UserController {
     }
 
     // Not recommended physical deletion - manual corrections only!
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<List<User>> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
