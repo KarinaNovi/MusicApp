@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,6 +22,7 @@ public class MusicInstrumentControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     void testSuccessfulGetAllMusicInstruments() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/musicInstruments/all"))
@@ -29,6 +31,7 @@ public class MusicInstrumentControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificMusicInstrument() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/musicInstruments/1"))
@@ -37,6 +40,7 @@ public class MusicInstrumentControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificMusicInstrumentGroups() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/musicInstruments/1/groups"))
@@ -45,6 +49,7 @@ public class MusicInstrumentControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testCreateMusicInstrument() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/musicInstruments/new")
@@ -56,6 +61,7 @@ public class MusicInstrumentControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateSpecificMusicInstrument() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/musicInstruments/updateMusicInstrument/4")
@@ -67,6 +73,7 @@ public class MusicInstrumentControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testDeleteSpecificUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/musicInstruments/deleteMusicInstrument/4"))

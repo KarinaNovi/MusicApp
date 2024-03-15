@@ -60,7 +60,7 @@ public class User {
     private String userLogin;
 
     @Schema(description = "Пароль")
-    @NotBlank
+    //@NotBlank
     @Size(min = 1, max = 256)
     @Column(name = "password", length = 256, nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

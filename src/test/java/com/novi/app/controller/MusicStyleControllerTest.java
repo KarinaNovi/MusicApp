@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,6 +22,7 @@ public class MusicStyleControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     void testSuccessfulGetAllMusicStyles() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/musicStyles/all"))
@@ -29,6 +31,7 @@ public class MusicStyleControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/musicStyles/1"))
@@ -37,6 +40,7 @@ public class MusicStyleControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificMusicStyleGroups() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/musicStyles/1/groups"))
@@ -45,6 +49,7 @@ public class MusicStyleControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testCreateMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/musicStyles/new")
@@ -56,6 +61,7 @@ public class MusicStyleControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateSpecificMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/musicStyles/updateMusicStyle/6")
@@ -67,6 +73,7 @@ public class MusicStyleControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testDeleteSpecificUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/musicStyles/deleteMusicStyle/125"))

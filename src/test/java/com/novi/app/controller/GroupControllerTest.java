@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,6 +22,7 @@ public class GroupControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     void testSuccessfulGetAllGroups() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/groups/all"))
@@ -29,6 +31,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificGroup() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/groups/75"))
@@ -37,6 +40,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificGroupGroups() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/groups/7/users"))
@@ -45,6 +49,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testCreateGroup() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/groups/new")
@@ -56,6 +61,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateSpecificGroup() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/groups/updateGroup/11")
@@ -67,6 +73,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testTerminateSpecificGroup() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/groups/terminateGroup/125"))
@@ -75,6 +82,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testDeleteSpecificGroup() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/groups/deleteGroup/125"))
@@ -83,6 +91,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetNewGroups() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .get("/groups/newGroups"))
@@ -91,6 +100,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetActiveGroups() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .get("/groups/activeGroups"))
@@ -99,6 +109,7 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetGroupsWithCurrentMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/groups/groupsWithStyle/1"))

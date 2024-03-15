@@ -66,8 +66,8 @@ public class SecurityConfig {
                             .requestMatchers("/login", "/logout", "*/new", "/logoutSuccessful")
                             .permitAll())
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/users/**").hasAnyRole("LEADER","USER").anyRequest().authenticated())
-
+                        authorizeHttpRequests.requestMatchers("/users/**").hasAnyRole("ADMIN","LEADER","USER").anyRequest().authenticated())
+                //.rememberMe(withDefaults())
                 .addFilterBefore(authenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling.

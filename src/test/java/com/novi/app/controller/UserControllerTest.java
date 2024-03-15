@@ -1,5 +1,6 @@
 package com.novi.app.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,6 +23,7 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @WithMockUser
     @Test
     void testSuccessfulGetAllUsers() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -30,6 +33,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/users/75"))
@@ -38,6 +42,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetSpecificUserGroups() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/75/groups"))
@@ -46,9 +51,9 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testCreateUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/new")
+        mockMvc.perform(post("/users/new")
                         //TODO: can be formatted into request body in json format
                         .content("""
                                 {
@@ -67,33 +72,33 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateSpecificUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/updateUser/126")
+        mockMvc.perform(post("/users/updateUser/126")
                         .content(asJsonString(TestUser.updateSimpleUser(126)))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
     @Test
+    @WithMockUser(roles="ADMIN")
     public void testTerminateSpecificUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/terminateUser/125"))
+        mockMvc.perform(post("/users/terminateUser/125"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void testDeleteSpecificUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/users/deleteUser/125"))
+                        .delete("/users/deleteUser/181"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetNewUsers() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/newUsers"))
@@ -102,6 +107,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetActiveUsers() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/activeUsers"))
@@ -110,6 +116,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testSuccessfulGetUsersWithCurrentMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/usersWithStyle/1"))
