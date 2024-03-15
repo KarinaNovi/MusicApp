@@ -28,9 +28,8 @@ public class UserLoginController {
                 credentials.password());
 
         Authentication auth = authenticationManager.authenticate(creds);
-
         // Generate token
-        String jwts = jwtService.getToken(auth.getName());
+        String jwts = jwtService.getToken(auth);
 
         // Build response with the generated token
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
