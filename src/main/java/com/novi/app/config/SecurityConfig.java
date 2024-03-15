@@ -3,7 +3,6 @@ package com.novi.app.config;
 import com.novi.app.service.oauth.AuthEntryPoint;
 import com.novi.app.service.impl.UserServiceImpl;
 import com.novi.app.service.oauth.AuthenticationFilter;
-import io.jsonwebtoken.JwtHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import java.util.Arrays;
-
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -77,7 +69,8 @@ public class SecurityConfig {
                             .requestMatchers("/login", "/logout", "*/new", "/logoutSuccessful")
                             .permitAll())
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/users/**").hasRole("USER").anyRequest().authenticated())
+                        authorizeHttpRequests.requestMatchers("/users/**").hasAnyRole("USER", "LEADER").anyRequest().authenticated())
+
                 .addFilterBefore(authenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling.
@@ -85,29 +78,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        //asList for future filters
-        config.setAllowedOrigins(Arrays.asList("*"));
-        config.setAllowedMethods(Arrays.asList("*"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(false);
-        config.applyPermitDefaultValues();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
-
-    //    @Bean
+//    @Bean
 //    public RoleHierarchy roleHierarchy() {
 //        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
 //        String hierarchy = "ADMIN > LEADER \n LEADER > USER";
 //        roleHierarchy.setHierarchy(hierarchy);
 //        return roleHierarchy;
 //    }
-
+//
 //    @Bean
 //    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
 //        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();

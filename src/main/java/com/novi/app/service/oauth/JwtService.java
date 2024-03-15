@@ -1,6 +1,5 @@
 package com.novi.app.service.oauth;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -8,18 +7,13 @@ import java.security.Key;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // TODO: spring-boot-starter-oauth2-client dependency and use keycloak
@@ -60,36 +54,29 @@ public class JwtService {
                 .signWith(key)
                 .compact();
     }
+
     // Get a token from request Authorization header,
     // verify the token, and get username
-    public String getAuthUser(HttpServletRequest request) {
-        String token = request.getHeader
-                (HttpHeaders.AUTHORIZATION);
-        if (token != null) {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token.replace(PREFIX, ""))
-                    .getBody()
-                    .getSubject();
-        }
-        return null;
-    }
-
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
+        String user = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token.replace(PREFIX, ""))
-                .getBody();
-        logger.info("claims: {}", claims);
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-        logger.info("authorities: {}", authorities);
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+                .getBody()
+                .getSubject();
+        List<SimpleGrantedAuthority> authorities = Arrays.stream(Jwts.parserBuilder()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(token.replace(PREFIX, ""))
+                        .getBody()
+                        .get(AUTHORITIES_KEY).toString().split(","))
+                .toList()
+                .stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        // TODO: check if rights are empty
+        logger.info("Incoming user {} has authorities: {}", user, authorities);
+        return new UsernamePasswordAuthenticationToken(user, null,
+                authorities);
     }
 }
