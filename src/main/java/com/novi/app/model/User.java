@@ -74,9 +74,18 @@ public class User {
     @Column(name = "deletion_date")
     private Date deletionDate;
 
-    @Schema(description = "Роль")
-    @Column(name = "user_role", length = 10, nullable = false)
-    private String userRole;
+    @Hidden
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "roles_users",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    private Set<UserRole> userRoles = new HashSet<>();
 
     @Hidden
     @ManyToMany(fetch = FetchType.LAZY,
@@ -134,7 +143,6 @@ public class User {
         this.email = email;
         this.userLogin = UserUtil.formatUserLogin(userLogin);
         this.password = UserUtil.encryptPassword(password);
-        this.userRole = String.valueOf(UserRole.USER);
         // TODO: format will be updated on UI side?
         this.birthday = birthday;
         this.registrationDate = new Date();

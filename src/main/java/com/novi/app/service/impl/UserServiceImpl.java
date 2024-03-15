@@ -1,8 +1,6 @@
 package com.novi.app.service.impl;
 
-import com.novi.app.model.Group;
-import com.novi.app.model.MusicInstrument;
-import com.novi.app.model.MusicStyle;
+import com.novi.app.model.*;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
 import org.slf4j.Logger;
@@ -11,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.novi.app.model.User;
 import com.novi.app.model.repository.UserRepository;
 
 import java.util.*;
@@ -164,7 +161,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             builder = org.springframework.security.core.userdetails.
                     User.withUsername(userLogin);
             builder.password(currentUser.getPassword());
-            builder.roles(currentUser.getUserRole());
+            builder.roles(currentUser.getUserRoles().stream().map(UserRole::getRoleName).toArray(String[]::new));
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
