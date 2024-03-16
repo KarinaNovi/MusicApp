@@ -156,10 +156,4 @@ public class UserController {
     public ResponseEntity<List<User>> getNewUsers() {
         return new ResponseEntity<>(userService.findNewlyCreatedUsers(), HttpStatus.OK);
     }
-
-    // TODO: move to musicController: /styles/{1}/users
-    @GetMapping("/usersWithStyle/{id}")
-    public ResponseEntity<List<User>> getUsersOfCurrentMusicStyle(@PathVariable("id") Integer musicStyleId) {
-        return new ResponseEntity<>(userService.getUsersWithCurrentMusicStyle(musicStyleId), HttpStatus.OK);
-    }
 }

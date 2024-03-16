@@ -6,6 +6,8 @@ import com.novi.app.service.oauth.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,6 +55,14 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+    @Bean
+    public RoleHierarchy getRoleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_USER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
     // Add filterChain method
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws
@@ -64,9 +74,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                             .requestMatchers("/login", "/logout", "*/new", "/logoutSuccessful")
+
                             .permitAll())
+
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/users/**").hasAnyRole("ADMIN","LEADER","USER").anyRequest().authenticated())
+                        authorizeHttpRequests.requestMatchers("/users/**").hasRole("USER").anyRequest().authenticated())
                 //.rememberMe(withDefaults())
                 .addFilterBefore(authenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
@@ -74,19 +86,4 @@ public class SecurityConfig {
                         authenticationEntryPoint(exceptionHandler));
         return http.build();
     }
-
-//    @Bean
-//    public RoleHierarchy roleHierarchy() {
-//        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-//        String hierarchy = "ADMIN > LEADER \n LEADER > USER";
-//        roleHierarchy.setHierarchy(hierarchy);
-//        return roleHierarchy;
-//    }
-//
-//    @Bean
-//    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
-//        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-//        expressionHandler.setRoleHierarchy(roleHierarchy());
-//        return expressionHandler;
-//    }
 }
