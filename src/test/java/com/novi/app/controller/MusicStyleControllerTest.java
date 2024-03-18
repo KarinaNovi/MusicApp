@@ -74,7 +74,7 @@ public class MusicStyleControllerTest {
 
     @Test
     @WithMockUser
-    public void testDeleteSpecificUser() throws Exception {
+    public void testDeleteSpecificStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/musicStyles/deleteMusicStyle/125"))
                 .andDo(print())
