@@ -46,6 +46,7 @@ public class User {
 
     @Schema(description = "E-mail")
     @NotBlank
+    @Email
     @Size(min = 1, max = 64)
     @Column(name = "email", length = 64, nullable = false)
     private String email;
@@ -62,6 +63,7 @@ public class User {
     @Schema(description = "Пароль")
     //@NotBlank
     @Size(min = 1, max = 256)
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$", message = "Password must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.")
     @Column(name = "password", length = 256, nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -139,7 +141,7 @@ public class User {
         this.firstName = UserUtil.formatName(firstName);
         this.lastName = UserUtil.formatName(lastName);
         this.middleName = UserUtil.formatName(middleName);
-        this.phoneNumber = UserUtil.formatPhoneNumber(phoneNumber);
+        this.phoneNumber = phoneNumber != null ? UserUtil.formatPhoneNumber(phoneNumber) : null;
         this.email = email;
         this.userLogin = UserUtil.formatUserLogin(userLogin);
         this.password = UserUtil.encryptPassword(password);

@@ -3,10 +3,14 @@ package com.novi.app.controller;
 import com.novi.app.model.Group;
 import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
+import com.novi.app.model.request.CreateUserRequest;
+import com.novi.app.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,10 @@ import java.util.*;
         description = "Все методы для работы с пользователями системы"
 )
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(
+            UserController.class
+    );
 
     private final UserService userService;
 
@@ -84,21 +92,17 @@ public class UserController {
 
     @Operation(summary = "Создать нового пользователя")
     @PostMapping("/new")
-    public ResponseEntity<Optional<User>> create(@Valid @RequestBody User user,
-                                                 BindingResult bindingResult) {
-        String firstName = user.getFirstName();
-        String lastName = user.getLastName();
-        String middleName = user.getMiddleName();
-        String phoneNumber = user.getPhoneNumber();
-        String email = user.getEmail();
-        String login = user.getUserLogin();
-        String password = user.getPassword();
-        String birthday = user.getBirthday();
-        if (bindingResult.hasErrors()) {
-            System.out.println("Mandatory parameter is null, check request body");
-            return new ResponseEntity<>(Optional.empty(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        user = new User(firstName,
+    public ResponseEntity<?> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        logger.trace("Incoming request: {}", createUserRequest);
+        String firstName = createUserRequest.getFirstName();
+        String lastName = createUserRequest.getLastName();
+        String middleName = createUserRequest.getMiddleName();
+        String phoneNumber = createUserRequest.getPhoneNumber();
+        String email = createUserRequest.getEmail();
+        String login = createUserRequest.getUserLogin();
+        String password = createUserRequest.getPassword();
+        String birthday = createUserRequest.getBirthday();
+        User user = new User(firstName,
                 lastName,
                 middleName,
                 phoneNumber,
@@ -107,7 +111,7 @@ public class UserController {
                 password,
                 birthday);
         userService.saveUser(user);
-        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
 
 //    @GetMapping("{id}/edit")
