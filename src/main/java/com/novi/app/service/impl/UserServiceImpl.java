@@ -1,11 +1,11 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.*;
+import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -94,15 +94,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void updateUser(Long userId, User user) {
+    public Optional<User> updateUser(Long userId, ModifyUserRequest modifyUserRequest) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            // TODO: how to update only changed fields and don't perform saving of potential incorrect user from UI?
-            user.setUserId(userId);
+            User user = optionalUser.get();
+            Optional.ofNullable(modifyUserRequest.getFirstName()).ifPresent(user::setLastName);
+            Optional.ofNullable(modifyUserRequest.getLastName()).ifPresent(user::setLastName);
+            Optional.ofNullable(modifyUserRequest.getMiddleName()).ifPresent(user::setMiddleName);
+            Optional.ofNullable(modifyUserRequest.getPhoneNumber()).ifPresent(user::setPhoneNumber);
+            Optional.ofNullable(modifyUserRequest.getEmail()).ifPresent(user::setEmail);
+            // TODO: check unique login or it is covered in scheme?
+            Optional.ofNullable(modifyUserRequest.getUserLogin()).ifPresent(user::setUserLogin);
+            // TODO: encryption
+            Optional.ofNullable(modifyUserRequest.getPassword()).ifPresent(user::setPassword);
             userRepository.save(user);
         } else {
             logger.warn("WARN: No existing user with such id");
         }
+        return optionalUser;
     }
 
     @Override

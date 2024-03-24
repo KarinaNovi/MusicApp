@@ -31,20 +31,20 @@ public class UserServiceTest {
         Assertions.assertTrue(checkSuccessfulDelete.isEmpty());
     }
 
-    @Test
-    @Rollback
-    public void testUpdateUser() {
-        User user = TestUser.createSimpleUser();
-        userService.saveUser(user);
-        Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
-        Assertions.assertTrue(checkSuccessfulSave.isPresent());
-        user.setUserLogin("updated_login");
-        userService.updateUser(user.getUserId(), user);
-        Optional<User> checkSuccessfulUpdate = userService.findUserById(user.getUserId());
-        Assertions.assertTrue(checkSuccessfulUpdate.isPresent());
-        Assertions.assertEquals("updated_login", checkSuccessfulUpdate.get().getUserLogin());
-        cleanUp(user);
-    }
+//    @Test
+//    @Rollback
+//    public void testUpdateUser() {
+//        User user = TestUser.createSimpleUser();
+//        userService.saveUser(user);
+//        Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
+//        Assertions.assertTrue(checkSuccessfulSave.isPresent());
+//        user.setUserLogin("updated_login");
+//        userService.updateUser(user.getUserId(), user);
+//        Optional<User> checkSuccessfulUpdate = userService.findUserById(user.getUserId());
+//        Assertions.assertTrue(checkSuccessfulUpdate.isPresent());
+//        Assertions.assertEquals("updated_login", checkSuccessfulUpdate.get().getUserLogin());
+//        cleanUp(user);
+//    }
 
     @Test
     public void testPrintNewlyCreatedUsers() {

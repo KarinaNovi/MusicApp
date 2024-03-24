@@ -4,6 +4,7 @@ import com.novi.app.model.Group;
 import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
 import com.novi.app.model.User;
+import com.novi.app.model.request.ModifyUserRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface UserService {
 
     // update info
     void saveUser(User user);
-    void updateUser(Long userId, User user);
+    Optional<User> updateUser(Long userId, ModifyUserRequest modifyUserRequest);
     void deleteUser(Long userId);
     void terminateUser(Long userId);
 

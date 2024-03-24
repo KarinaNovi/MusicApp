@@ -4,7 +4,7 @@ import com.novi.app.model.Group;
 import com.novi.app.model.MusicInstrument;
 import com.novi.app.model.MusicStyle;
 import com.novi.app.model.request.CreateUserRequest;
-import com.novi.app.service.impl.UserServiceImpl;
+import com.novi.app.model.request.ModifyUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.novi.app.model.User;
@@ -120,13 +119,12 @@ public class UserController {
 //        return "users/edit";
 //    }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @PostMapping("/updateUser/{id}")
-    public ResponseEntity<Optional<User>> update(@RequestBody User user,
+    public ResponseEntity<Optional<User>> update(@RequestBody ModifyUserRequest modifyUserRequest,
                                                  @PathVariable("id") Long userId) {
-        //TODO: validate - which parameters need to be updated, which need to be taken as is
-        userService.updateUser(userId, user);
-        return new ResponseEntity<>(userService.findUserById(user.getUserId()), HttpStatus.OK);
+        Optional<User> optionalUser = userService.updateUser(userId, modifyUserRequest);
+        return new ResponseEntity<>(optionalUser, HttpStatus.OK);
     }
 
     // terminate = set deletionDate as sysdate only
