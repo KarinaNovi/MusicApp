@@ -50,6 +50,15 @@ public class MusicStyleControllerTest {
 
     @Test
     @WithMockUser
+    void testSuccessfulGetSpecificMusicStyleUsers() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/musicStyles/1/users"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
     public void testCreateMusicStyle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/musicStyles/new")

@@ -2,6 +2,7 @@ package com.novi.app.service;
 
 import com.novi.app.model.Group;
 import com.novi.app.model.User;
+import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.testData.TestUser;
 import com.novi.app.util.Constants;
 import org.junit.jupiter.api.Assertions;
@@ -31,20 +32,21 @@ public class UserServiceTest {
         Assertions.assertTrue(checkSuccessfulDelete.isEmpty());
     }
 
-//    @Test
-//    @Rollback
-//    public void testUpdateUser() {
-//        User user = TestUser.createSimpleUser();
-//        userService.saveUser(user);
-//        Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
-//        Assertions.assertTrue(checkSuccessfulSave.isPresent());
-//        user.setUserLogin("updated_login");
-//        userService.updateUser(user.getUserId(), user);
-//        Optional<User> checkSuccessfulUpdate = userService.findUserById(user.getUserId());
-//        Assertions.assertTrue(checkSuccessfulUpdate.isPresent());
-//        Assertions.assertEquals("updated_login", checkSuccessfulUpdate.get().getUserLogin());
-//        cleanUp(user);
-//    }
+    @Test
+    @Rollback
+    public void testUpdateUser() {
+        User user = TestUser.createSimpleUser();
+        userService.saveUser(user);
+        Optional<User> checkSuccessfulSave = userService.findUserById(user.getUserId());
+        Assertions.assertTrue(checkSuccessfulSave.isPresent());
+        ModifyUserRequest modifyUserRequest = new ModifyUserRequest();
+        modifyUserRequest.setUserLogin("updated_login");
+        userService.updateUser(user.getUserId(), modifyUserRequest);
+        Optional<User> checkSuccessfulUpdate = userService.findUserById(user.getUserId());
+        Assertions.assertTrue(checkSuccessfulUpdate.isPresent());
+        Assertions.assertEquals("updated_login", checkSuccessfulUpdate.get().getUserLogin());
+        cleanUp(user);
+    }
 
     @Test
     public void testPrintNewlyCreatedUsers() {

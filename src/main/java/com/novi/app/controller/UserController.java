@@ -93,23 +93,7 @@ public class UserController {
     @PostMapping("/new")
     public ResponseEntity<?> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
         logger.trace("Incoming request: {}", createUserRequest);
-        String firstName = createUserRequest.getFirstName();
-        String lastName = createUserRequest.getLastName();
-        String middleName = createUserRequest.getMiddleName();
-        String phoneNumber = createUserRequest.getPhoneNumber();
-        String email = createUserRequest.getEmail();
-        String login = createUserRequest.getUserLogin();
-        String password = createUserRequest.getPassword();
-        String birthday = createUserRequest.getBirthday();
-        User user = new User(firstName,
-                lastName,
-                middleName,
-                phoneNumber,
-                email,
-                login,
-                password,
-                birthday);
-        userService.saveUser(user);
+        userService.createUser(createUserRequest);
         return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
 
@@ -123,6 +107,7 @@ public class UserController {
     @PostMapping("/updateUser/{id}")
     public ResponseEntity<Optional<User>> update(@RequestBody ModifyUserRequest modifyUserRequest,
                                                  @PathVariable("id") Long userId) {
+        logger.trace("Incoming request: {}", modifyUserRequest);
         Optional<User> optionalUser = userService.updateUser(userId, modifyUserRequest);
         return new ResponseEntity<>(optionalUser, HttpStatus.OK);
     }

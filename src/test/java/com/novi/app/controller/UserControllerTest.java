@@ -63,7 +63,7 @@ public class UserControllerTest {
                                     "phoneNumber": "89803489886",
                                     "email": "1@mail.com",
                                     "birthday": "1940-12-09",
-                                    "password": "12345"
+                                    "password": "12345Yes!"
                                 }""")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -111,15 +111,6 @@ public class UserControllerTest {
     void testSuccessfulGetActiveUsers() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/activeUsers"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser
-    void testSuccessfulGetUsersWithCurrentMusicStyle() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/usersWithStyle/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

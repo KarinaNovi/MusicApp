@@ -1,6 +1,7 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.*;
+import com.novi.app.model.request.CreateUserRequest;
 import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
@@ -91,6 +92,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             logger.warn("WARN: No existing user with such id");
         }
         return groupsOfCurrentLeader;
+    }
+
+    @Override
+    public User createUser(CreateUserRequest createUserRequest) {
+        String firstName = createUserRequest.getFirstName();
+        String lastName = createUserRequest.getLastName();
+        String middleName = createUserRequest.getMiddleName();
+        String phoneNumber = createUserRequest.getPhoneNumber();
+        String email = createUserRequest.getEmail();
+        String login = createUserRequest.getUserLogin();
+        String password = createUserRequest.getPassword();
+        String birthday = createUserRequest.getBirthday();
+        User user = new User(firstName,
+                lastName,
+                middleName,
+                phoneNumber,
+                email,
+                login,
+                password,
+                birthday);
+        userRepository.save(user);
+        return user;
     }
 
     @Override
