@@ -5,7 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.novi.app.service.testData.TestUser;
+import com.novi.app.model.request.CreateUserRequest;
+import com.novi.app.model.request.ModifyUserRequest;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +54,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser
     public void testCreateUser() throws Exception {
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setFirstName("Test");
+        createUserRequest.setLastName("MockUser");
+        createUserRequest.setPhoneNumber("89803489886");
+        createUserRequest.setEmail("1@mail.com");
+        createUserRequest.setBirthday("1997-09-21");
+        createUserRequest.setPassword("Test1234!");
         mockMvc.perform(post("/users/new")
-                        //TODO: can be formatted into request body in json format
-                        .content("""
-                                {
-                                    "firstName": "Test",
-                                    "lastName": "WithoutLogin",
-                                    "middleName": null,
-                                    "phoneNumber": "89803489886",
-                                    "email": "1@mail.com",
-                                    "birthday": "1940-12-09",
-                                    "password": "12345Yes!"
-                                }""")
+                        .content(asJsonString(createUserRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -74,8 +72,10 @@ public class UserControllerTest {
     @Test
     @WithMockUser
     public void testUpdateSpecificUser() throws Exception {
+        ModifyUserRequest modifyUserRequest = new ModifyUserRequest();
+        modifyUserRequest.setUserLogin("updated_login");
         mockMvc.perform(post("/users/updateUser/126")
-                        .content(asJsonString(TestUser.updateSimpleUser(126)))
+                        .content(asJsonString(modifyUserRequest))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk());

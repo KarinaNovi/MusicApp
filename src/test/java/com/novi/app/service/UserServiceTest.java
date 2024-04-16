@@ -7,6 +7,8 @@ import com.novi.app.service.testData.TestUser;
 import com.novi.app.util.Constants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -16,6 +18,10 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 public class UserServiceTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(
+            UserServiceTest.class
+    );
 
     @Autowired
     private UserService userService;
@@ -50,7 +56,6 @@ public class UserServiceTest {
 
     @Test
     public void testPrintNewlyCreatedUsers() {
-        // TODO: create logger for output
         Calendar testDate = new GregorianCalendar();
         testDate.add(Calendar.MONTH, -1);
         List<String> newUsersNames = userService
@@ -94,7 +99,7 @@ public class UserServiceTest {
     public void testGetGroupOfLeader() {
         User user = userService.findUserById(75L).orElseThrow();
         Set<Group> groupsOfCurrentLeader = userService.getGroupsOfLeader(75L);
-        System.out.println(user.getFirstName() + ": " + groupsOfCurrentLeader
+        logger.info(user.getFirstName() + ": " + groupsOfCurrentLeader
                 .stream()
                 .map(Group::getGroupName).toList());
     }
@@ -111,12 +116,12 @@ public class UserServiceTest {
                 .findAny()
                 .orElseThrow();
         Set<Group> groups = userService.getUserGroups(testUser.getUserId());
-        System.out.println(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
+        logger.info(testUser.getFirstName() + ": " + groups.stream().map(Group::getGroupName).toList());
     }
 
     @Test
     public void testGetUsersWithSpecificStyle() {
-        System.out.println(userService.getUsersWithCurrentMusicStyle(1));
+        logger.info(userService.getUsersWithCurrentMusicStyle(1).toString());
     }
 
     // clean up after test - temporary till test DB

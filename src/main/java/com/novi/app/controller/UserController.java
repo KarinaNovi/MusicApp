@@ -43,8 +43,10 @@ public class UserController {
     }
 
     @Operation(summary = "Получить информацию о пользователях")
+    @CrossOrigin
     @GetMapping("/all")
     public ResponseEntity<List<User>> index(){
+        logger.debug("Getting all users");
         List<User> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -53,6 +55,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<User>> getUserById(@Parameter(description = "id пользователя")
                                                       @PathVariable("id") Long userId){
+        logger.debug("Getting user info with id: {}", userId);
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
@@ -113,7 +116,7 @@ public class UserController {
     }
 
     // terminate = set deletionDate as sysdate only
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);
@@ -123,7 +126,7 @@ public class UserController {
     }
 
     // Not recommended physical deletion - manual corrections only!
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<List<User>> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
