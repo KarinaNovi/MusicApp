@@ -25,6 +25,7 @@ import java.util.*;
 // TODO: align with new html, for now only for tests
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 @Tag(
         name = "Пользователи",
         description = "Все методы для работы с пользователями системы"
@@ -43,7 +44,6 @@ public class UserController {
     }
 
     @Operation(summary = "Получить информацию о пользователях")
-    @CrossOrigin
     @GetMapping("/all")
     public ResponseEntity<List<User>> index(){
         logger.debug("Getting all users");
@@ -87,24 +87,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getGroupsOfLeader(userId), HttpStatus.OK);
     }
 
-//    @GetMapping("/new")
-//    public String newPerson(@ModelAttribute User user){
-//        return "users/new";
-//    }
-
     @Operation(summary = "Создать нового пользователя")
     @PostMapping("/new")
-    public ResponseEntity<?> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    public ResponseEntity<User> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
         logger.trace("Incoming request: {}", createUserRequest);
-        userService.createUser(createUserRequest);
-        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
+        User user = userService.createUser(createUserRequest);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
-
-//    @GetMapping("{id}/edit")
-//    public String edit(Model model, @PathVariable("id") Long userId){
-//        model.addAttribute("addUser", userService.findUserById(userId));
-//        return "users/edit";
-//    }
 
     //@PreAuthorize("hasRole('USER')")
     @PostMapping("/updateUser/{id}")

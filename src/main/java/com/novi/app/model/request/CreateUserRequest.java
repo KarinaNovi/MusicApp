@@ -29,11 +29,9 @@ public class CreateUserRequest {
     private String lastName;
 
     @Schema(description = "Отчество")
-    @Size(min = 1, max = 100)
     private String middleName;
 
     @Schema(description = "Номер телефона")
-    @Size(min = 1, max = 20)
     private String phoneNumber;
 
     @Schema(description = "E-mail")
@@ -50,7 +48,7 @@ public class CreateUserRequest {
     private String userLogin;
 
     @Schema(description = "Пароль")
-    //@NotBlank
+    @NotBlank
     @Size(min = 1, max = 256)
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$", message = "Password must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

@@ -35,7 +35,8 @@ public class User {
     private String lastName;
 
     @Schema(description = "Отчество")
-    @Size(min = 1, max = 100)
+    // TODO: think about empty values, not null
+    //@Size(min = 1, max = 100)
     @Column(name = "middle_name", length = 100)
     private String middleName;
 

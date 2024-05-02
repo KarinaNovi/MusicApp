@@ -7,8 +7,8 @@ import java.util.UUID;
 public final class UserUtil {
 
     public static String formatName(String inputName) {
-        return inputName == null
-                ? null
+        return inputName == null || inputName.isEmpty()
+                ? inputName
                 : inputName.substring(0, 1).toUpperCase() + inputName.substring(1);
     }
 
