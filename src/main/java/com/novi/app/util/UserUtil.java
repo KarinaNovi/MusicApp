@@ -1,5 +1,6 @@
 package com.novi.app.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.UUID;
@@ -17,7 +18,7 @@ public final class UserUtil {
     }
 
     public static String formatUserLogin(String userLogin) {
-        return userLogin != null ? userLogin : String.valueOf(UUID.randomUUID());
+        return !StringUtils.isEmpty(userLogin) ? userLogin : String.valueOf(UUID.randomUUID());
     }
 
     // TODO: create specific class for encryption and de- process

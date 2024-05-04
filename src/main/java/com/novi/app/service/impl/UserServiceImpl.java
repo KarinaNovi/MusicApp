@@ -5,6 +5,7 @@ import com.novi.app.model.request.CreateUserRequest;
 import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -121,15 +122,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            Optional.ofNullable(modifyUserRequest.getFirstName()).ifPresent(user::setLastName);
-            Optional.ofNullable(modifyUserRequest.getLastName()).ifPresent(user::setLastName);
-            Optional.ofNullable(modifyUserRequest.getMiddleName()).ifPresent(user::setMiddleName);
-            Optional.ofNullable(modifyUserRequest.getPhoneNumber()).ifPresent(user::setPhoneNumber);
-            Optional.ofNullable(modifyUserRequest.getEmail()).ifPresent(user::setEmail);
+            // TODO: simplify
+            if (!StringUtils.isEmpty(modifyUserRequest.getFirstName())) {
+                user.setFirstName(modifyUserRequest.getFirstName());
+            }
+            if (!StringUtils.isEmpty(modifyUserRequest.getLastName())) {
+                user.setLastName(modifyUserRequest.getLastName());
+            }
+            if (!StringUtils.isEmpty(modifyUserRequest.getMiddleName())) {
+                user.setMiddleName(modifyUserRequest.getMiddleName());
+            }
+            if (!StringUtils.isEmpty(modifyUserRequest.getPhoneNumber())) {
+                user.setPhoneNumber(modifyUserRequest.getPhoneNumber());
+            }
+            if (!StringUtils.isEmpty(modifyUserRequest.getBirthday())) {
+                user.setBirthday(modifyUserRequest.getBirthday());
+            }
+            if (!StringUtils.isEmpty(modifyUserRequest.getEmail())) {
+                user.setEmail(modifyUserRequest.getEmail());
+            }
             // TODO: check unique login or it is covered in scheme?
-            Optional.ofNullable(modifyUserRequest.getUserLogin()).ifPresent(user::setUserLogin);
+            if (!StringUtils.isEmpty(modifyUserRequest.getUserLogin())) {
+                user.setUserLogin(modifyUserRequest.getUserLogin());
+            }
             // TODO: encryption
-            Optional.ofNullable(modifyUserRequest.getPassword()).ifPresent(user::setPassword);
+            if (!StringUtils.isEmpty(modifyUserRequest.getPassword())) {
+                user.setPassword(modifyUserRequest.getPassword());
+            }
             userRepository.save(user);
         } else {
             logger.warn("WARN: No existing user with such id");
