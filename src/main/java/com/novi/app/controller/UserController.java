@@ -22,7 +22,6 @@ import com.novi.app.service.UserService;
 
 import java.util.*;
 
-// TODO: align with new html, for now only for tests
 @RestController
 @RequestMapping("/users")
 @CrossOrigin
@@ -95,7 +94,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/updateUser/{id}")
     public ResponseEntity<Optional<User>> update(@RequestBody ModifyUserRequest modifyUserRequest,
                                                  @PathVariable("id") Long userId) {
