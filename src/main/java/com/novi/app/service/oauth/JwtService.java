@@ -42,7 +42,6 @@ public class JwtService {
 
     // Generate signed JWT token
     public String getToken(Authentication authentication) {
-        logger.info("authentication: {}", authentication);
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -75,7 +74,7 @@ public class JwtService {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         // TODO: check if rights are empty
-        logger.info("Incoming user {} has authorities: {}", user, authorities);
+        logger.debug("Incoming user {} has authorities: {}", user, authorities);
         return new UsernamePasswordAuthenticationToken(user, null,
                 authorities);
     }

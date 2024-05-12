@@ -96,7 +96,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/updateUser/{id}")
-    public ResponseEntity<Optional<User>> update(@RequestBody ModifyUserRequest modifyUserRequest,
+    public ResponseEntity<Optional<User>> update(@Valid @RequestBody ModifyUserRequest modifyUserRequest,
                                                  @PathVariable("id") Long userId) {
         logger.trace("Incoming request: {}", modifyUserRequest);
         Optional<User> optionalUser = userService.updateUser(userId, modifyUserRequest);

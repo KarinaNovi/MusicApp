@@ -62,7 +62,7 @@ public class User {
     private String userLogin;
 
     @Schema(description = "Пароль")
-    //@NotBlank
+    @NotBlank
     @Size(min = 1, max = 256)
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$", message = "Password must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.")
     @Column(name = "password", length = 256, nullable = false)
