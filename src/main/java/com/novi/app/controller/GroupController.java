@@ -16,6 +16,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/groups")
+@CrossOrigin
 public class GroupController {
 
     private final GroupService groupService;

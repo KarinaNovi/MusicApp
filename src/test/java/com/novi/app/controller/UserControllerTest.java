@@ -43,7 +43,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles="LEADER")
     void testSuccessfulGetSpecificUserGroups() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/75/groups"))
@@ -70,7 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles="USER_126")
     public void testUpdateSpecificUser() throws Exception {
         ModifyUserRequest modifyUserRequest = new ModifyUserRequest();
         modifyUserRequest.setUserLogin("updated_login");

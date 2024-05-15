@@ -51,6 +51,7 @@ public class UserController {
     }
 
     @Operation(summary = "Получить информацию о пользователе по его id")
+    //@PreAuthorize("hasRole('USER'+#userId)")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<User>> getUserById(@Parameter(description = "id пользователя")
                                                       @PathVariable("id") Long userId){
@@ -89,12 +90,12 @@ public class UserController {
     @Operation(summary = "Создать нового пользователя")
     @PostMapping("/new")
     public ResponseEntity<User> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        logger.trace("Incoming request: {}", createUserRequest);
+        logger.debug("Incoming request: {}", createUserRequest);
         User user = userService.createUser(createUserRequest);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER_'+#userId)")
     @PostMapping("/updateUser/{id}")
     public ResponseEntity<Optional<User>> update(@Valid @RequestBody ModifyUserRequest modifyUserRequest,
                                                  @PathVariable("id") Long userId) {
@@ -114,7 +115,7 @@ public class UserController {
     }
 
     // Not recommended physical deletion - manual corrections only!
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<List<User>> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);

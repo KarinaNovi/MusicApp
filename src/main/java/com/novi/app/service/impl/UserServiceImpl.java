@@ -5,6 +5,7 @@ import com.novi.app.model.request.CreateUserRequest;
 import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.UserService;
 import com.novi.app.util.Constants;
+import com.novi.app.util.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,8 +114,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 login,
                 password,
                 birthday);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        addUserRole("USER" + "_" + savedUser.getUserId(), savedUser);
+        userRepository.save(savedUser);
+        logger.debug("user: {}", savedUser);
         return user;
+    }
+    public void addUserRole(String roleName, User user) {
+        final var userRole = new UserRole();
+        userRole.setRoleName(roleName);
+        userRole.setUsers(Collections.singletonList(user));
+        Set<UserRole> roles = user.getUserRoles();
+        roles.add(userRole);
+        user.setUserRoles(roles);
     }
 
     @Override
@@ -145,9 +157,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if (!StringUtils.isEmpty(modifyUserRequest.getUserLogin())) {
                 user.setUserLogin(modifyUserRequest.getUserLogin());
             }
-            // TODO: encryption
             if (!StringUtils.isEmpty(modifyUserRequest.getPassword())) {
-                user.setPassword(modifyUserRequest.getPassword());
+                user.setPassword(UserUtil.encryptPassword(modifyUserRequest.getPassword()));
             }
             userRepository.save(user);
         } else {

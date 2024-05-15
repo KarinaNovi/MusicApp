@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/musicStyles")
+@CrossOrigin
 public class MusicStyleController {
 
     private final MusicStyleService musicStyleService;

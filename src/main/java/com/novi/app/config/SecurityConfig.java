@@ -58,19 +58,14 @@ public class SecurityConfig {
     @Bean
     public RoleHierarchy getRoleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_USER";
+        String hierarchy = "ROLE_ADMIN > ROLE_LEADER > ROLE_USER";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
 
     // Add filterChain method
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws
-            Exception {
-
-//        http.csrf(AbstractHttpConfigurer::disable).cors(withDefaults())
-//                .authorizeHttpRequests((authorizeHttpRequests) ->
-//                        authorizeHttpRequests.anyRequest().permitAll());
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .sessionManagement((sessionManagement) -> sessionManagement.
@@ -78,11 +73,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                             .requestMatchers("/login", "/logout", "*/new", "/logoutSuccessful")
-
                             .permitAll())
 
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/users/**").hasRole("USER").anyRequest().authenticated())
+                        authorizeHttpRequests.requestMatchers("/users/**").authenticated())
                 //.rememberMe(withDefaults())
                 .addFilterBefore(authenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)

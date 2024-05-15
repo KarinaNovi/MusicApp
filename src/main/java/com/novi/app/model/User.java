@@ -13,7 +13,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Schema(description = "Информация о пользователе")
 public class User {

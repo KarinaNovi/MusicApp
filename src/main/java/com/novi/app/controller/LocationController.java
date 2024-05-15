@@ -16,6 +16,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/locations")
+@CrossOrigin
 public class LocationController {
 
     private final LocationService locationService;
