@@ -80,6 +80,25 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserMusicInstruments(userId), HttpStatus.OK);
     }
 
+    // @ExceptionHandler
+    @Operation(summary = "Добавить музыкальный стиль пользователю")
+    @PostMapping("/{userId}/styles/{styleId}")
+    public ResponseEntity<String> addMusicStyleIntoUserList(@Parameter(description = "id пользователя")
+                                                                        @PathVariable("userId") Long userId,
+                                                                        @PathVariable("styleId") Integer styleId){
+        userService.addMusicStyle(userId, styleId);
+        return new ResponseEntity<>("Music style has been added", HttpStatus.OK);
+    }
+
+    @Operation(summary = "Добавить музыкальный инструмент пользователю")
+    @PostMapping("/{userId}/instruments/{instrumentId}")
+    public ResponseEntity<String> addMusicInstrumentIntoUserList(@Parameter(description = "id пользователя")
+                                                                 @PathVariable("userId") Long userId,
+                                                                 @PathVariable("instrumentId") Integer instrumentId){
+        userService.addMusicInstrument(userId, instrumentId);
+        return new ResponseEntity<>("Music instrument has been added", HttpStatus.OK);
+    }
+
     @Operation(summary = "Получить информацию о группах лидера")
     @GetMapping("/{id}/leaderGroups")
     public ResponseEntity<Set<Group>> getLeaderGroups(@Parameter(description = "id пользователя")

@@ -153,8 +153,10 @@ public class User {
         this.deletionDate = new Date(Constants.MAX_DATE);
     }
 
-    @ToString.Include(name = "password")
-    private String maskPassword() {
-        return "********";
+    @Override
+    public String toString() {
+        return String.format(
+                "User[id=%d, firstName='%s', lastName='%s', phoneNumber='%s', email='%s']",
+                userId, firstName, lastName, phoneNumber, email);
     }
 }

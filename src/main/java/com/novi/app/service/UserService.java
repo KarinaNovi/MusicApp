@@ -6,7 +6,6 @@ import com.novi.app.model.MusicStyle;
 import com.novi.app.model.User;
 import com.novi.app.model.request.CreateUserRequest;
 import com.novi.app.model.request.ModifyUserRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +18,8 @@ public interface UserService {
     Set<Group> getUserGroups(Long userId);
     Set<MusicStyle> getUserMusicStyles(Long userId);
     Set<MusicInstrument> getUserMusicInstruments(Long userId);
+    void addMusicInstrument(Long userId, Integer instrumentId);
+    void addMusicStyle(Long userId, Integer styleId);
     Set<Group> getGroupsOfLeader(Long userId);
 
     // update info

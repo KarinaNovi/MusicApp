@@ -1,6 +1,8 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.*;
+import com.novi.app.model.repository.MusicInstrumentRepository;
+import com.novi.app.model.repository.MusicStyleRepository;
 import com.novi.app.model.request.CreateUserRequest;
 import com.novi.app.model.request.ModifyUserRequest;
 import com.novi.app.service.UserService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.novi.app.model.repository.UserRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -24,9 +27,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     );
 
     private final UserRepository userRepository;
+    private final MusicInstrumentRepository musicInstrumentRepository;
+    private final MusicStyleRepository musicStyleRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    // maybe create manager due to many repo in constructor of service layout
+    public UserServiceImpl(UserRepository userRepository,
+                           MusicInstrumentRepository musicInstrumentRepository, MusicStyleRepository musicStyleRepository) {
         this.userRepository = userRepository;
+        this.musicInstrumentRepository = musicInstrumentRepository;
+        this.musicStyleRepository = musicStyleRepository;
     }
 
     @Override
@@ -115,23 +124,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 password,
                 birthday);
         User savedUser = userRepository.save(user);
-        addUserRole("USER" + "_" + savedUser.getUserId(), savedUser);
-        userRepository.save(savedUser);
+        String newUserRole = "USER_" + savedUser.getUserId();
+        addUserRole(newUserRole, savedUser);
         logger.debug("user: {}", savedUser);
         return user;
-    }
-    public void addUserRole(String roleName, User user) {
-        final var userRole = new UserRole();
-        userRole.setRoleName(roleName);
-        userRole.setUsers(Collections.singletonList(user));
-        Set<UserRole> roles = user.getUserRoles();
-        roles.add(userRole);
-        user.setUserRoles(roles);
     }
 
     @Override
     public Optional<User> updateUser(Long userId, ModifyUserRequest modifyUserRequest) {
         Optional<User> optionalUser = userRepository.findById(userId);
+        logger.info("Incoming request: {}", modifyUserRequest);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             // TODO: simplify
@@ -153,8 +155,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if (!StringUtils.isEmpty(modifyUserRequest.getEmail())) {
                 user.setEmail(modifyUserRequest.getEmail());
             }
-            // TODO: check unique login or it is covered in scheme?
+            // TODO: check unique login and throw error if needed
             if (!StringUtils.isEmpty(modifyUserRequest.getUserLogin())) {
+                logger.info("Need to change login to the one from request: {}", modifyUserRequest.getUserLogin());
                 user.setUserLogin(modifyUserRequest.getUserLogin());
             }
             if (!StringUtils.isEmpty(modifyUserRequest.getPassword())) {
@@ -187,6 +190,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } else {
             logger.warn("WARN: No existing user with such id");
         }
+    }
+
+    public void addUserRole(String roleName, User user) {
+        UserRole userRole = new UserRole();
+        userRole.setRoleName(roleName);
+        user.getUserRoles().add(userRole);
+        logger.debug("roles of user {} with id {}", user.getUserRoles().stream().map(UserRole::getRoleName).collect(Collectors.toList()), user.getUserId());
+        userRepository.save(user);
+    }
+
+    public void addMusicInstrument(Long userId, Integer instrumentId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
+        MusicInstrument instrument = musicInstrumentRepository.findById(instrumentId).orElseThrow(() -> new RuntimeException("There is no music instrument with such id, data is broken"));
+        user.getMusicInstruments().add(instrument);
+        logger.info("instruments of user: {}", user.getMusicInstruments().stream().map(MusicInstrument::getInstrumentName).collect(Collectors.toList()));
+        userRepository.save(user);
+    }
+
+    public void addMusicStyle(Long userId, Integer styleId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
+        MusicStyle style = musicStyleRepository.findById(styleId).orElseThrow(() -> new RuntimeException("There is no music instrument with such id, data is broken"));
+        user.getMusicStyles().add(style);
+        logger.info("styles of user: {}", user.getMusicStyles().stream().map(MusicStyle::getStyleName).collect(Collectors.toList()));
+        userRepository.save(user);
     }
 
     @Override
