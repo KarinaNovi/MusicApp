@@ -18,14 +18,16 @@ public interface UserService {
     Set<Group> getUserGroups(Long userId);
     Set<MusicStyle> getUserMusicStyles(Long userId);
     Set<MusicInstrument> getUserMusicInstruments(Long userId);
-    void addMusicInstrument(Long userId, Integer instrumentId);
-    void addMusicStyle(Long userId, Integer styleId);
     Set<Group> getGroupsOfLeader(Long userId);
 
     // update info
     void saveUser(User user);
     User createUser(CreateUserRequest createUserRequest);
     Optional<User> updateUser(Long userId, ModifyUserRequest modifyUserRequest);
+    void addUserRole(String roleName, User user);
+    void addMusicInstrument(Long userId, Integer instrumentId);
+    void addMusicStyle(Long userId, Integer styleId);
+    void addGroup(Long userId, Long groupId);
     void deleteUser(Long userId);
     void terminateUser(Long userId);
 

@@ -74,7 +74,7 @@ public class Group {
             joinColumns = { @JoinColumn(name = "group_id") },
             inverseJoinColumns = { @JoinColumn(name = "instrument_id") }
     )
-    private List<MusicInstrument> musicInstruments;
+    private Set<MusicInstrument> musicInstruments;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -86,7 +86,7 @@ public class Group {
             joinColumns = { @JoinColumn(name = "group_id") },
             inverseJoinColumns = { @JoinColumn(name = "style_id") }
     )
-    private List<MusicStyle> musicStyles;
+    private Set<MusicStyle> musicStyles;
 
     public Group(@NotNull String groupName,
                  int maxQuantity,

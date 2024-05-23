@@ -99,6 +99,15 @@ public class UserController {
         return new ResponseEntity<>("Music instrument has been added", HttpStatus.OK);
     }
 
+    @Operation(summary = "Добавить группу  пользователю")
+    @PostMapping("/{userId}/groups/{groupId}")
+    public ResponseEntity<String> addGroupIntoUserList(@Parameter(description = "id пользователя")
+                                                                 @PathVariable("userId") Long userId,
+                                                                 @PathVariable("groupId") Long groupId){
+        userService.addGroup(userId, groupId);
+        return new ResponseEntity<>("Group has been added", HttpStatus.OK);
+    }
+
     @Operation(summary = "Получить информацию о группах лидера")
     @GetMapping("/{id}/leaderGroups")
     public ResponseEntity<Set<Group>> getLeaderGroups(@Parameter(description = "id пользователя")

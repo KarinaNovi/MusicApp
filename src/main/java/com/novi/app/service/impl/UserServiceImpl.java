@@ -1,6 +1,7 @@
 package com.novi.app.service.impl;
 
 import com.novi.app.model.*;
+import com.novi.app.model.repository.GroupRepository;
 import com.novi.app.model.repository.MusicInstrumentRepository;
 import com.novi.app.model.repository.MusicStyleRepository;
 import com.novi.app.model.request.CreateUserRequest;
@@ -29,13 +30,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final MusicInstrumentRepository musicInstrumentRepository;
     private final MusicStyleRepository musicStyleRepository;
+    private final GroupRepository groupRepository;
 
     // maybe create manager due to many repo in constructor of service layout
     public UserServiceImpl(UserRepository userRepository,
-                           MusicInstrumentRepository musicInstrumentRepository, MusicStyleRepository musicStyleRepository) {
+                           MusicInstrumentRepository musicInstrumentRepository, MusicStyleRepository musicStyleRepository, GroupRepository groupRepository) {
         this.userRepository = userRepository;
         this.musicInstrumentRepository = musicInstrumentRepository;
         this.musicStyleRepository = musicStyleRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Override
@@ -192,6 +195,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    @Override
     public void addUserRole(String roleName, User user) {
         UserRole userRole = new UserRole();
         userRole.setRoleName(roleName);
@@ -200,6 +204,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
     }
 
+    @Override
     public void addMusicInstrument(Long userId, Integer instrumentId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
         MusicInstrument instrument = musicInstrumentRepository.findById(instrumentId).orElseThrow(() -> new RuntimeException("There is no music instrument with such id, data is broken"));
@@ -208,12 +213,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
     }
 
+    @Override
     public void addMusicStyle(Long userId, Integer styleId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
-        MusicStyle style = musicStyleRepository.findById(styleId).orElseThrow(() -> new RuntimeException("There is no music instrument with such id, data is broken"));
+        MusicStyle style = musicStyleRepository.findById(styleId).orElseThrow(() -> new RuntimeException("There is no music style with such id, data is broken"));
         user.getMusicStyles().add(style);
         logger.info("styles of user: {}", user.getMusicStyles().stream().map(MusicStyle::getStyleName).collect(Collectors.toList()));
         userRepository.save(user);
+    }
+
+    @Override
+    public void addGroup(Long userId, Long groupId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("There is no group with such id, data is broken"));
+        user.getGroups().add(group);
+        logger.info("groups of user: {}", user.getGroups().stream().map(Group::getGroupName).collect(Collectors.toList()));
+        inheritMusicStyleFromGroup(group, user);
+        userRepository.save(user);
+    }
+
+    private void inheritMusicStyleFromGroup(Group group,
+                                            User user) {
+        Set<MusicStyle> musicStyles = group.getMusicStyles();
+        if (!musicStyles.isEmpty()) {
+            user.getMusicStyles().addAll(musicStyles);
+            logger.debug("Added music styles from group {} to user {}: {}", group.getGroupId(),
+                    user.getUserId(), musicStyles);
+        }
     }
 
     @Override
