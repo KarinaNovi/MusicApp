@@ -51,7 +51,8 @@ public class UserController {
     }
 
     @Operation(summary = "Получить информацию о пользователе по его id")
-    //@PreAuthorize("hasRole('USER'+#userId)")
+    // а если он хочет скрыть какую-то инфу, например, др?
+    @PreAuthorize("hasRole('USER'+#userId)")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<User>> getUserById(@Parameter(description = "id пользователя")
                                                       @PathVariable("id") Long userId){
@@ -83,6 +84,7 @@ public class UserController {
     // @ExceptionHandler
     @Operation(summary = "Добавить музыкальный стиль пользователю")
     @PostMapping("/{userId}/styles/{styleId}")
+    @PreAuthorize("hasRole('USER'+#userId)")
     public ResponseEntity<String> addMusicStyleIntoUserList(@Parameter(description = "id пользователя")
                                                                         @PathVariable("userId") Long userId,
                                                                         @PathVariable("styleId") Integer styleId){
@@ -92,6 +94,7 @@ public class UserController {
 
     @Operation(summary = "Добавить музыкальный инструмент пользователю")
     @PostMapping("/{userId}/instruments/{instrumentId}")
+    @PreAuthorize("hasRole('USER'+#userId)")
     public ResponseEntity<String> addMusicInstrumentIntoUserList(@Parameter(description = "id пользователя")
                                                                  @PathVariable("userId") Long userId,
                                                                  @PathVariable("instrumentId") Integer instrumentId){
@@ -101,6 +104,7 @@ public class UserController {
 
     @Operation(summary = "Добавить группу  пользователю")
     @PostMapping("/{userId}/groups/{groupId}")
+    @PreAuthorize("hasRole('USER'+#userId)")
     public ResponseEntity<String> addGroupIntoUserList(@Parameter(description = "id пользователя")
                                                                  @PathVariable("userId") Long userId,
                                                                  @PathVariable("groupId") Long groupId){
@@ -133,7 +137,7 @@ public class UserController {
     }
 
     // terminate = set deletionDate as sysdate only
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER'+#userId) or hasRole('ADMIN')")
     @RequestMapping(value = "/terminateUser/{id}", method = RequestMethod.POST)
     public ResponseEntity<Optional<User>> terminateUser(@PathVariable("id") Long userId) {
         Optional<User> user = userService.findUserById(userId);

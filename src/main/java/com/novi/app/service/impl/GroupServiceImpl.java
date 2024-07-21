@@ -2,19 +2,29 @@ package com.novi.app.service.impl;
 
 import com.novi.app.model.*;
 import com.novi.app.model.repository.GroupRepository;
+import com.novi.app.model.repository.UserRepository;
 import com.novi.app.service.GroupService;
 import com.novi.app.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupServiceImpl implements GroupService {
 
-    private final GroupRepository groupRepository;
+    private static final Logger logger = LoggerFactory.getLogger(
+            GroupServiceImpl.class
+    );
 
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
+
+    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -123,6 +133,26 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.save(group);
         } else {
             System.out.println("WARN: No existing group with such id");
+        }
+    }
+
+    @Override
+    public void addUser(Long groupId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("There is no user with such id, data is broken"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("There is no group with such id, data is broken"));
+        group.getUsers().add(user);
+        logger.info("users in current group: {}", group.getUsers().stream().map(User::getUserLogin).collect(Collectors.toList()));
+        inheritMusicInstrumentFromUser(group, user);
+        userRepository.save(user);
+    }
+
+    private void inheritMusicInstrumentFromUser(Group group,
+                                                User user) {
+        Set<MusicInstrument> musicInstruments = user.getMusicInstruments();
+        if (!musicInstruments.isEmpty()) {
+            group.getMusicInstruments().addAll(musicInstruments);
+            logger.debug("Added music instruments from user {} to group {}: {}", user.getUserId(),
+                    group.getGroupId(), musicInstruments);
         }
     }
 

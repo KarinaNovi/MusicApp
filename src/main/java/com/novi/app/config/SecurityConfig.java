@@ -76,7 +76,9 @@ public class SecurityConfig {
                             .permitAll())
 
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/users/**").authenticated())
+                        authorizeHttpRequests.requestMatchers("/users/**", "/groups/**", "/musicInstruments/**",
+                                        "/musicStyles/**", "/locations/**")
+                                .authenticated())
                 //.rememberMe(withDefaults())
                 .addFilterBefore(authenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)

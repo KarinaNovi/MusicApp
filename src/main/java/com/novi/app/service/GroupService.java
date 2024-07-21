@@ -22,6 +22,7 @@ public interface GroupService {
     void terminateGroup(Long groupId);
     void deleteGroup(Long groupId);
     void updateGroup(Long groupId, Group group);
+    void addUser(Long groupId, Long userId);
 
     // many groups operation
     List<Group> findAllGroups();

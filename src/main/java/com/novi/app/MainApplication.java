@@ -1,5 +1,6 @@
 package com.novi.app;
 
+import com.novi.app.util.MusicInstrumentLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -15,9 +16,9 @@ public class MainApplication {
             MainApplication.class
     );
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws Exception {
         ConfigurableApplicationContext context = SpringApplication.run(MainApplication.class, args);
+        MusicInstrumentLoader.loadInstruments();
         if (context.isRunning()) {
             logger.info("Application started");
         }
